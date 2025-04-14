@@ -151,7 +151,7 @@ export default function Testimonials() {
                       fontFamily: 'Poppins',
                     }}
                   >
-                    "{testimonial.testimonial}"
+                    {testimonial.testimonial}
                   </Typography>
                 </CardContent>
   

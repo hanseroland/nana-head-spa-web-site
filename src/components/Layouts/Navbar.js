@@ -127,7 +127,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                 '&:hover': { color: 'primary.main' },
                               }}
                             >
-                            S'inscrire
+                            S&apos;inscrire
                         </Button>
                         <Button 
                             color="primary" 

@@ -103,7 +103,7 @@ export default function Footer() {
                                     size="small"
                                     sx={{ flexShrink: 0 }}
                                 >
-                                    S'abonner
+                                    S&apos;abonner
                                 </Button>
                             </Stack>
                         </Box>
@@ -185,7 +185,7 @@ export default function Footer() {
                             &nbsp;•&nbsp;
                         </Typography>
                         <Link color="text.secondary" variant="body2" href="#">
-                          Conditions d'utilisation
+                          Conditions d&apos;utilisation
                         </Link>
                         <Copyright />
                     </div>

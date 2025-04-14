@@ -75,9 +75,9 @@ function AboutSection() {
             transition={{ duration: 1, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Je m'appelle Gaëlle, passionnée par le bien-être et les soins du cuir chevelu. J’ai découvert le head spa au cours d’un voyage au Japon, une expérience profondément relaxante et régénérante.
+            Je m&apos;appelle Gaëlle, passionnée par le bien-être et les soins du cuir chevelu. J&apos;ai découvert le head spa au cours d’un voyage au Japon, une expérience profondément relaxante et régénérante.
             <br /><br />
-            De retour en France, j’ai décidé de créer un cocon dédié au soin du cheveu et de l’esprit, un espace où chaque personne peut se reconnecter à elle-même à travers des rituels doux, inspirés de la nature.
+            De retour en France, j&apos;ai décidé de créer un cocon dédié au soin du cheveu et de l&apos;esprit, un espace où chaque personne peut se reconnecter à elle-même à travers des rituels doux, inspirés de la nature.
             <br /><br />
             Mon objectif : vous offrir un moment suspendu, où détente, écoute et confiance sont les maîtres mots. Parce que vous méritez un instant rien que pour vous.
           </MotionTypography>
