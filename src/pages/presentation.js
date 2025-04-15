@@ -16,7 +16,7 @@ export default function Presentation() {
     return (
         <>
             <Head>
-                <title>Présentation | SPA Beauty</title>
+                <title>Présentation | ANA HEAD SPA</title>
                 <meta name="description" content="Découvrez nos spa head pour le bien-être et la relaxation." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
@@ -32,4 +32,4 @@ export default function Presentation() {
            
         </>
     );
-}
+} 

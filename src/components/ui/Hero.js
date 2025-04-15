@@ -3,6 +3,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles"; // Importer le thème
 import Bubble from "./Bubble";
+import globalVariables from "@/src/config/globalVariables";
 
 
 export default function Hero() {
@@ -111,9 +112,10 @@ export default function Hero() {
               color: "background.default",
               mb: 2,
               fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" },
+              textShadow: '1px 1px 3px rgba(0, 0, 0, 0.62)', // Douce ombre pour lisibilité
             }}
           >
-            Bienvenue au <span style={{ color: "#FFD1DC" }}>SPA-HEAD</span>
+            Bienvenue au <span style={{ color: theme.palette.primary.main }}> {globalVariables.siteName} </span>
           </Typography>
           <Typography
             variant="body1"

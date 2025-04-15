@@ -39,17 +39,17 @@ function AboutSection() {
             }}
           >
             <Image
-              src="/images/usen-parmanov-JJi82Ayk_kQ-unsplash.jpg" // à remplacer par ton image réelle
+              src="/images/nana-head.jpeg" // à remplacer par ton image réelle
               alt="Portrait de Gaëlle, fondatrice de l'institut"
-              width={600}
-              height={800}
+              width={400}
+              height={600}
               style={{ width: "100%", height: "auto", objectFit: "cover" }}
             />
           </MotionBox>
         </Grid>
 
         {/* Texte */}
-        <Grid  size={{ xs: 12, md: 6 }} >
+        <Grid  size={{ xs: 12, md: 12 }} >
           <MotionTypography
             variant="h3"
             component="h2"
@@ -75,11 +75,16 @@ function AboutSection() {
             transition={{ duration: 1, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Je m&apos;appelle Gaëlle, passionnée par le bien-être et les soins du cuir chevelu. J&apos;ai découvert le head spa au cours d’un voyage au Japon, une expérience profondément relaxante et régénérante.
-            <br /><br />
-            De retour en France, j&apos;ai décidé de créer un cocon dédié au soin du cheveu et de l&apos;esprit, un espace où chaque personne peut se reconnecter à elle-même à travers des rituels doux, inspirés de la nature.
-            <br /><br />
-            Mon objectif : vous offrir un moment suspendu, où détente, écoute et confiance sont les maîtres mots. Parce que vous méritez un instant rien que pour vous.
+            Hello tout le monde !<br />
+            Je me présente pour celles et ceux qui ne me connaissent pas encore : je m&apos;appelle Nawël, je suis la fondatrice de NANA HEAD SPA à Lannion, ouvert le 2 décembre 2024.
+            <br />
+            Avant de me lancer dans cette aventure incroyable, j&apos;ai travaillé dans des domaines aussi variés que le commerce, l&apos;animation, la restauration et j&apos;ai fait plusieurs saisons en station de ski – autant dire que la polyvalence, ça me connaît ! Mais au fond de moi, j&apos;ai toujours rêvé de devenir ma propre patronne, et aujourd&apos;hui, je vis enfin ce rêve.
+            <br />
+            J&apos;ai suivi une formation spécialisée à Paris, j&apos;ai perfectionné mes massages avec des heures d&apos;entraînement, et j&apos;ai rénové mon local de A à Z toute seule pour créer un espace de bien-être à mon image, pensé pour la détente et le renouveau.
+            <br />
+            Mon objectif ? Vous faire découvrir des moments d&apos;évasion et de relaxation profonde grâce à des soins uniques pour prendre soin de votre cuir chevelu, de vos cheveux et de votre esprit.
+            <br />
+            Merci à tous pour votre soutien incroyable depuis le début de cette aventure. Si vous n&apos;êtes jamais venus, j&apos;ai hâte de vous rencontrer et de vous faire découvrir tout ce que le Head Spa peut vous offrir !
           </MotionTypography>
 
           {/* Signature manuscrite */}
@@ -93,7 +98,7 @@ function AboutSection() {
             transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            Gaëlle
+            Nawël
           </MotionTypography>
         </Grid>
 

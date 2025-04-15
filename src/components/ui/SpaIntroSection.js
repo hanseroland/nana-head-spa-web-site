@@ -4,6 +4,7 @@ import { Box, Typography, Button, useTheme, useMediaQuery } from '@mui/material'
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import globalVariables from '@/src/config/globalVariables';
 
 const SpaIntroSection = () => {
   const theme = useTheme();
@@ -41,10 +42,10 @@ const SpaIntroSection = () => {
       >
         <Box sx={{ borderRadius: '2rem', overflow: 'hidden', width: '100%', maxWidth: 450, boxShadow: theme.shadows[1] }}>
           <Image
-            src="/images/pexels-arina-krasnikova-6663368.jpg"
+            src="/images/spa-nana-head.jpeg"
             alt="Expérience head spa pour femmes"
             width={450}
-            height={450}
+            height={440}
             layout="responsive"
             objectFit="cover"
             quality={90}
@@ -57,11 +58,11 @@ const SpaIntroSection = () => {
       {/* Texte */}
       <Box sx={{ flex: 1 }}>
         <Typography variant="h4" component="h2" sx={{ fontWeight: 600, color: theme.palette.primary.main, mb: 2 }}>
-          L’univers du Head Spa
+          L’univers du {globalVariables.siteName}
         </Typography>
         <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 4, whiteSpace: 'pre-line' }}>
           Offrez à vos cheveux et votre esprit une pause bien méritée.{"\n"}
-          Notre Head Spa, pensé exclusivement pour les femmes, mêle douceur, détente et soins personnalisés.{"\n"}
+          Notre {globalVariables.siteName}, pensé exclusivement pour les femmes, mêle douceur, détente et soins personnalisés.{"\n"}
           Chaque geste, chaque parfum, chaque son est conçu pour apaiser vos tensions et raviver votre éclat naturel.{"\n"}
           Loin du stress du quotidien, entrez dans une bulle de sérénité et de beauté.{"\n"}
           Découvrez une ambiance unique, subtilement parfumée et enveloppée de teintes douces.{"\n"}

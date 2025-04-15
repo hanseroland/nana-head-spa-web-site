@@ -15,6 +15,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Link from 'next/link'; // Import du composant Link de Next.js
 import { Typography } from '@mui/material';
+import globalVariables from '@/src/config/globalVariables';
 
 
 
@@ -70,6 +71,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
             <Container maxWidth="lg">
                 <StyledToolbar variant="dense" disableGutters>
                     {/* LOGO */}
+                    <Link href="/" passHref>
                     <Typography
                         variant="h6"
                         sx={{
@@ -77,11 +79,14 @@ export default function Navbar({ themeMode, setThemeMode }) {
                         fontWeight: 'bold',
                         color: 'primary.main',
                         display: { xs: 'none', md: 'flex' },
-                        mr: 4
+                        mr: 4,
+                        textShadow: '1px 1px 3px rgba(255, 0, 144, 0.29)', // Douce ombre pour lisibilité
                         }}
                     >
-                        SPA-HEAD
+                        {globalVariables.siteName}
                     </Typography>
+                    </Link>
+                    
                     <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
 
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

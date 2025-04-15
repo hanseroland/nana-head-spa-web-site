@@ -114,7 +114,7 @@ export default function Blog() {
     return (
         <>
             <Head>
-                <title>Blog | SPA Beauty</title>
+                <title>Blog | ANA HEAD SPA</title>
                 <meta name="description" content="Découvrez nos articles sur le bien-être et la relaxation." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
