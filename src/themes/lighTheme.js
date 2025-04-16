@@ -4,7 +4,7 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#E59AA6', // rose pastel
+      main: '#d33e68', // rose pastel
     },
     secondary: {
       main: '#D2B48C', // beige doux
@@ -19,7 +19,7 @@ const lightTheme = createTheme({
     },
     custom: {
       bubble1: '#FFD1DC', // Couleur des bulles 1
-      bubble2: '#E59AA6', // Couleur des bulles 2
+      bubble2: '#d33e68', // Couleur des bulles 2
     },
     divider: '#E0E0E0', // Couleur de la bordure
     custom: {

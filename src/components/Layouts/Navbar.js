@@ -13,11 +13,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import Link from 'next/link'; // Import du composant Link de Next.js
-import { Typography } from '@mui/material';
+import Link from 'next/link';
+import { Typography, useTheme } from '@mui/material';
+import { useRouter } from 'next/router'; // ✅ import pour détecter la page active
 import globalVariables from '@/src/config/globalVariables';
-
-
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -36,9 +35,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 export default function Navbar({ themeMode, setThemeMode }) {
-
-
     const [open, setOpen] = React.useState(false);
+    const theme = useTheme();
+    const router = useRouter(); // ✅ pour accéder au chemin actif
+    const currentPath = router.pathname;
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -48,8 +48,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
         setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
     };
 
-     // Liste des liens vers les pages
-     const navLinks = [
+    const navLinks = [
         { label: 'Presentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
         { label: 'Reservations', href: '/reservations' },
@@ -72,44 +71,57 @@ export default function Navbar({ themeMode, setThemeMode }) {
                 <StyledToolbar variant="dense" disableGutters>
                     {/* LOGO */}
                     <Link href="/" passHref>
-                    <Typography
-                        variant="h6"
-                        sx={{
-                        fontFamily: 'Poppins',
-                        fontWeight: 'bold',
-                        color: 'primary.main',
-                        display: { xs: 'none', md: 'flex' },
-                        mr: 4,
-                        textShadow: '1px 1px 3px rgba(255, 0, 144, 0.29)', // Douce ombre pour lisibilité
-                        }}
-                    >
-                        {globalVariables.siteName}
-                    </Typography>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontFamily: 'Poppins',
+                                fontWeight: 'bold',
+                                color: 'primary.main',
+                                display: { xs: 'none', md: 'flex' },
+                                mr: 4,
+                                textShadow: '1px 1px 3px rgba(255, 0, 144, 0.29)',
+                            }}
+                        >
+                            {globalVariables.siteName}
+                        </Typography>
                     </Link>
-                    
-                    <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
 
+                    <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
+                        {/* LIENS DESKTOP */}
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                              {navLinks.map((link) => (
-                                <Link key={link.label} href={link.href} passHref>
-                                    <Button 
-                                        variant="text" 
-                                        color="info" 
-                                        size="medium"
-                                        sx={{
-                                            fontWeight: 600,
-                                            fontFamily: 'Poppins',
-                                            textTransform: 'none',
-                                            color: 'text.primary',
-                                            '&:hover': { color: 'primary.main' },
-                                          }}
+                            {navLinks.map((link) => {
+                                const isActive = currentPath === link.href;
+
+                                return (
+                                    <Link key={link.label} href={link.href} passHref>
+                                        <Button
+                                            variant="text"
+                                            color="info"
+                                            size="medium"
+                                            sx={{
+                                                fontWeight: 600,
+                                                fontFamily: 'Poppins',
+                                                textTransform: 'none',
+                                                color: isActive ? 'primary.main' : 'text.primary',
+                                                borderBottom: isActive ? '2px solid' : 'none',
+                                                borderColor: isActive ? 'primary.main' : 'transparent',
+                                                borderRadius: 0,
+                                                '&:hover': {
+                                                    color: 'primary.main',
+                                                    borderColor: 'primary.main',
+                                                    borderBottom: '2px solid',
+                                                },
+                                            }}
                                         >
-                                        {link.label}
-                                    </Button>
-                                </Link>
-                            ))}
+                                            {link.label}
+                                        </Button>
+                                    </Link>
+                                );
+                            })}
                         </Box>
                     </Box>
+
+                    {/* ACTIONS DESKTOP */}
                     <Box
                         sx={{
                             display: { xs: 'none', md: 'flex' },
@@ -118,11 +130,11 @@ export default function Navbar({ themeMode, setThemeMode }) {
                         }}
                     >
                         <IconButton onClick={toggleTheme} color="inherit">
-                            {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon sx={{color:"#fff"}} />}
+                            {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon sx={{ color: "#fff" }} />}
                         </IconButton>
-                        <Button 
-                            color="primary" 
-                            variant="text" 
+                        <Button
+                            color="primary"
+                            variant="text"
                             size="medium"
                             sx={{
                                 fontWeight: 600,
@@ -130,28 +142,32 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                 textTransform: 'none',
                                 color: 'text.primary',
                                 '&:hover': { color: 'primary.main' },
-                              }}
-                            >
+                            }}
+                        >
                             S&apos;inscrire
                         </Button>
-                        <Button 
-                            color="primary" 
-                            variant="contained" 
+                        <Button
+                            color="primary"
+                            variant="contained"
                             size="medium"
                             sx={{
                                 fontWeight: 600,
                                 fontFamily: 'Poppins',
                                 textTransform: 'none',
-                                color: 'text.primary',
-                                '&:hover': { color: 'primary.main' },
-                              }}
-                            >
+                                backgroundColor: theme.palette.primary.main,
+                                color: theme.palette.primary.contrastText,
+                                '&:hover': {
+                                    backgroundColor: theme.palette.primary.dark,
+                                    color: 'primary.main'
+                                },
+                            }}
+                        >
                             Se connecter
                         </Button>
-
                     </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
 
+                    {/* MENU MOBILE */}
+                    <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
                         <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
                             <MenuIcon />
                         </IconButton>
@@ -176,13 +192,36 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                         <CloseRoundedIcon />
                                     </IconButton>
                                 </Box>
-                                <MenuItem>Features</MenuItem>
-                                <MenuItem>Testimonials</MenuItem>
-                                <MenuItem>Highlights</MenuItem>
-                                <MenuItem>Pricing</MenuItem>
-                                <MenuItem>FAQ</MenuItem>
-                                <MenuItem>Blog</MenuItem>
+
+                                {/* LIENS MOBILE */}
+                                {navLinks.map((link) => {
+                                    const isActive = currentPath === link.href;
+
+                                    return (
+                                        <Link key={link.label} href={link.href} passHref>
+                                            <MenuItem
+                                                sx={{
+                                                    fontWeight: 600,
+                                                    fontFamily: 'Poppins',
+                                                    textTransform: 'none',
+                                                    color: isActive ? 'primary.main' : 'text.primary',
+                                                    backgroundColor: isActive
+                                                        ? alpha(theme.palette.primary.main, 0.05)
+                                                        : 'transparent',
+                                                    '&:hover': {
+                                                        color: 'primary.main',
+                                                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                                                    },
+                                                }}
+                                            >
+                                                {link.label}
+                                            </MenuItem>
+                                        </Link>
+                                    );
+                                })}
+
                                 <Divider sx={{ my: 3 }} />
+
                                 <MenuItem>
                                     <IconButton onClick={toggleTheme} color="inherit">
                                         {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
@@ -190,12 +229,12 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                 </MenuItem>
                                 <MenuItem>
                                     <Button color="primary" variant="contained" fullWidth>
-                                        Sign up
+                                        Se connecter
                                     </Button>
                                 </MenuItem>
                                 <MenuItem>
                                     <Button color="primary" variant="outlined" fullWidth>
-                                        Sign in
+                                        S'inscrire
                                     </Button>
                                 </MenuItem>
                             </Box>

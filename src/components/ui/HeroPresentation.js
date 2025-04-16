@@ -61,8 +61,8 @@ function HeroPresentation() {
           variant="subtitle1"
           fontFamily="Poppins"
           fontSize={{ xs: "1rem", sm: "1.2rem" }}
-          color={theme.palette.text.secondary}
-          mt={2}
+          color="#fff"
+          mt={2} 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.8 }}

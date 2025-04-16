@@ -69,23 +69,27 @@ const SpaIntroSection = () => {
           Laissez-vous chouchouter par des rituels capillaires venus du Japon, dans un cocon girly, doux et relaxant.
         </Typography>
         <Button
-          color="primary" 
-          variant="contained" 
+          color="primary"
+          variant="contained"
           size="medium"
           sx={{
-              fontWeight: 600,
-              fontFamily: 'Poppins',
-              textTransform: 'none',
-              color: 'text.primary',
-              '&:hover': { color: 'primary.main' },
-            }}
+            fontWeight: 600,
+            fontFamily: 'Poppins',
+            textTransform: 'none',
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+              color: 'primary.main'
+            },
+          }}
           onClick={() => router.push('/presentation')}
         >
           En savoir plus
         </Button>
       </Box>
 
-     
+
     </Box>
   );
 };

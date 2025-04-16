@@ -13,13 +13,13 @@ const formulas = [
     duration: '45 min',
     image: '/images/pexels-karolina-grabowska-4041386.jpg',
     soins: [
-      '- Diagnostic capillaire',
-      '- Massage du crâne relaxant',
-      '- Brosses spécifique pour activer la circulation du sang',
-      '- Huiles essentielles adaptées',
-      '- Rinçage classique',
-      '- 2 Shampooings',
-      '- Après-shampooing'
+      '🪞 Diagnostic capillaire',
+      '💆‍♀️ Massage du crâne relaxant',
+      '🖌️ Brosses spécifique pour activer la circulation du sang',
+      '🌿 Huiles essentielles adaptées',
+      '🚿 Rinçage classique',
+      '+ 🧴 2 Shampooings',
+      '+ 💧 Après-shampooing',
     ],
   },
   {
@@ -29,14 +29,14 @@ const formulas = [
     duration: '60 min',
     image: '/images/pexels-hannah-barata-776560167-27925507.jpg',
     soins: [
-      '- Diagnostic capillaire',
-      '- Massage du crâne relaxant',
-      '- Brosses spécifiques pour activer la circulation du sang',
-      '- Huiles essentielles adaptées',
-      '- Massage du visage, des cervicales, du torse jusqu\'au bout des doigts cela va soulager les tensions, ainsi que les maux de tête',
-      '- Soin vapeur qui permet de drainer les cellules mortes et l\'excès de sébum accumulés',
-      '- Rinçage sous l\'arche',
-      '- 2 shampooings + après-shampooing'
+      '🪞 Diagnostic capillaire',
+      '💆‍♀️ Massage du crâne relaxant',
+      '🖌️ Brosses spécifiques pour activer la circulation du sang',
+      '🌿 Huiles essentielles adaptées',
+      '🤲 Massage visage & haut du corps pour soulager les tensions',
+      '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
+      '🚿 Rinçage sous l’arche',
+      '+ 🧴 2 shampooings + après-shampooing',
     ],
   },
   {
@@ -46,14 +46,14 @@ const formulas = [
     duration: "1h30 min",
     image: "/images/pexels-elly-fairytale-3865560.jpg",
     soins: [
-      '- Diagnostic capillaire',
-      '- Massage du crâne relaxant',
-      '- Brosses spécifiques pour activer la circulation du sang',
-      '- Huiles essentielles adaptées',
-      '- Massage du visage, des cervicales, du torse jusqu\'au bout des doigts, cela va soulager les tensions, ainsi que les maux de tête',
-      '- Soin vapeur qui permet de drainer les cellules mortes et l\'excès de sébum accumulés',
-      '- Rinçage sous l\'arche',
-      '- 2 shampooings + après-shampooing',
+      '🪞 Diagnostic capillaire',
+      '💆‍♀️ Massage du crâne relaxant',
+      '🖌️ Brosses spécifiques pour activer la circulation du sang',
+      '🌿 Huiles essentielles adaptées',
+      '🤲 Massage visage & haut du corps pour soulager les tensions',
+      '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
+      '🚿 Rinçage sous l’arche',
+      '+ 🧴 2 shampooings + après-shampooing',
     ],
   },
 ];
@@ -106,16 +106,16 @@ const StarFormulasSection = () => {
               justifyContent: 'space-between',
             }}
           >
-           
+
             <CardContent>
               <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
                 {formula.title}
               </Typography>
-              <Typography variant="body2" sx={{ color: theme.palette.text.secondary,fontWeight:600, mt: 1 }}>
+              <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontWeight: 600, mt: 1 }}>
                 {formula.price} ・ {formula.duration}
               </Typography>
 
-             
+
               <List dense sx={{ pl: 0.1 }}>
                 {formula.soins.map((soin, index) => (
                   <ListItem key={index} disableGutters sx={{ py: 0.1 }}>
@@ -124,7 +124,7 @@ const StarFormulasSection = () => {
                       primaryTypographyProps={{
                         fontSize: '0.875rem',
                         color: theme.palette.text.secondary,
-                        
+
                       }}
                     />
                   </ListItem>
@@ -144,16 +144,20 @@ const StarFormulasSection = () => {
 
       <Box display="flex" justifyContent="center">
         <Button
-          color="primary" 
-          variant="contained" 
+          color="primary"
+          variant="contained"
           size="medium"
           sx={{
-              fontWeight: 600,
-              fontFamily: 'Poppins',
-              textTransform: 'none',
-              color: 'text.primary',
-              '&:hover': { color: 'primary.main' },
-            }}
+            fontWeight: 600,
+            fontFamily: 'Poppins',
+            textTransform: 'none',
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+              color: 'primary.main'
+            },
+          }}
           onClick={() => router.push('/formules')}
         >
           Voir toutes nos formules

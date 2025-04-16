@@ -84,7 +84,7 @@ function TestimonialsSection() {
             >
               <Avatar
                 sx={{
-                  bgcolor: '#E59AA6',
+                  bgcolor: theme.palette.primary.main,
                   color: 'white',
                   mx: 'auto',
                   width: 44,
@@ -136,17 +136,19 @@ function TestimonialsSection() {
           variant="outlined"
           size="large"
           sx={{
-            borderColor: "#E59AA6",
-            color: "#E59AA6",
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
             fontFamily: "Poppins",
             fontWeight: 600,
             px: 4,
             py: 1.5,
             mt: 2,
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
             '&:hover': {
-              backgroundColor: "#E59AA6",
-              color: "white",
-            }
+                backgroundColor: theme.palette.primary.dark,
+                color: 'primary.main'
+            },
           }}
         >
           Voir tous les avis Google

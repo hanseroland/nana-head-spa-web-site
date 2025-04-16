@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles"; // Importer le thème
 import Bubble from "./Bubble";
 import globalVariables from "@/src/config/globalVariables";
+import { useRouter } from "next/router";
 
 
 export default function Hero() {
 
   const theme = useTheme(); // Accéder au thème Material-UI
+  const router = useRouter();
 
 
   // Variantes pour les animations des bulles
@@ -95,6 +97,7 @@ export default function Hero() {
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
+          mt={5}
           sx={{
             flex: 1,
             display: "flex",
@@ -123,6 +126,7 @@ export default function Hero() {
               color: "background.default",
               mb: 4,
               fontSize: { xs: "1rem", sm: "1.2rem" },
+              textShadow: '1px 1px 3px rgba(0, 0, 0, 0.62)', // Douce ombre pour lisibilité
             }}
           >
             Offrez-vous une expérience de bien-être unique et relaxante.
@@ -152,7 +156,8 @@ export default function Hero() {
               }}
               component={motion.a}
               whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.95 }} 
+              onClick={() => router.push('/formules')}
             >
               Découvrir nos formules
             </Button>
@@ -172,6 +177,7 @@ export default function Hero() {
               component={motion.a}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => router.push('/reservations')}
             >
               Prendre un rendez-vous
             </Button>
@@ -185,6 +191,7 @@ export default function Hero() {
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
+          mt={5}
           sx={{
             flex: 1,
             display: { xs: "none", md: "block" }, // Masquer la vidéo en mode tablette et mobile

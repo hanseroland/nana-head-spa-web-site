@@ -4,7 +4,7 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#E59AA6',
+      main: '#d33e68',
     },
     secondary: {
       main: '#D2B48C',
@@ -19,7 +19,7 @@ const darkTheme = createTheme({
     },
     custom: {
       bubble1: '#FFD1DC', // Couleur des bulles 1
-      bubble2: '#E59AA6', // Couleur des bulles 2
+      bubble2: '#d33e68', // Couleur des bulles 2
     },
     divider: '#3C3C3C', // Couleur de la bordure pour le mode sombre
     custom: {

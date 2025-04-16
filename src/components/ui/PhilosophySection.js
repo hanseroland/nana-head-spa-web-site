@@ -8,17 +8,17 @@ const MotionTypography = motion(Typography);
 
 const philosophyData = [
   {
-    icon: <SpaRounded sx={{ fontSize: 40, color: "#E59AA6" }} />,
+    icon: <SpaRounded sx={{ fontSize: 40, color: "#d33e68" }} />,
     title: "Bien-être holistique",
     description: "Nous prenons soin de votre corps, de votre esprit et de vos émotions pour un équilibre global et durable.",
   },
   {
-    icon: <EmojiNatureRounded sx={{ fontSize: 40, color: "#E59AA6" }} />,
+    icon: <EmojiNatureRounded sx={{ fontSize: 40, color: "#d33e68" }} />,
     title: "Beauté naturelle",
     description: "Nous valorisons la simplicité, la douceur et la beauté authentique, sans artifices.",
   },
   {
-    icon: <FavoriteBorderRounded sx={{ fontSize: 40, color: "#E59AA6" }} />,
+    icon: <FavoriteBorderRounded sx={{ fontSize: 40, color: "#d33e68" }} />,
     title: "Relation de confiance",
     description: "Chaque cliente est accueillie avec écoute, respect et bienveillance dans un espace sécurisant.",
   },
