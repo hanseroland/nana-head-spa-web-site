@@ -204,8 +204,8 @@ export default function Hero() {
 
           <Box
             sx={{
-              width: "500px", // Taille de la bulle
-              height: "500px", // Taille de la bulle
+              width: "530px", // Taille de la bulle
+              height: "550px", // Taille de la bulle
               borderRadius: "50%", // Forme circulaire
               overflow: "hidden", // Masquer les débordements
               boxShadow: (theme) => theme.shadows[4], // Ombre pour un effet de profondeur
@@ -214,7 +214,7 @@ export default function Hero() {
             }}
           >
             <video
-              src="/videos/spa-vid3.mp4"
+              src="/videos/spa-head.mp4"
               autoPlay
               loop
               muted

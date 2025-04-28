@@ -45,7 +45,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
     };
 
     const toggleTheme = () => {
-        setThemeMode((prevMode) => (prevMode === 'dark' ? 'light' : 'light'));
+        setThemeMode((prevMode) => (prevMode === 'dark' ? 'light' : 'dark'));
     };
 
     const navLinks = [ 
