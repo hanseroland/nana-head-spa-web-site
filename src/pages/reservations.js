@@ -1,11 +1,14 @@
 import Head from "next/head";
 import ReusableHero from "@/components/ui/ReusableHero";
-import { Box, Container, Typography, useTheme } from "@mui/material";
+import { Box, Button, Container, Typography, useTheme } from "@mui/material";
 import { useContext, useState } from "react";
 import { BookingContext, BookingProvider } from '@/context/BookingContext';
 import BookingCalendar from "@/components/ui/BookingCalendar";
 import BookingModal from "@/components/ui/BookingModal"; // 👈 Importe BookingModal
 import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+
 
 
 const MotionBox = motion(Box);
@@ -79,22 +82,64 @@ const ReservationPage = () => {
             onClose={handleCloseModal}
             selectedDate={selectedDate}
           />
-          {/* 👈 Affichage des réservations */}
-          {/*  <Typography variant="h4" mt={4}>Réservations Actuelles :</Typography> */}
-          {/*  {bookings.length > 0 ? (
-            <List>
-              {bookings.map((booking, index) => (
-                <ListItem key={index}>
-                  <ListItemText
-                    primary={booking.title}
-                    secondary={`Le ${new Date(booking.start).toLocaleDateString()} à ${new Date(booking.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - Fin à ${new Date(booking.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography>Aucune réservation pour le moment.</Typography>
-          )} */}
+
+          {/* QR Code pour Instagram */}
+          {/*<Box sx={{ mt: 3 }}>
+            <Typography
+              variant="h6"
+              component="p"
+              sx={{ mb: 2, fontWeight: 500 }}
+            >
+              Scannez pour accéder directement à notre page Instagram ✨
+            </Typography>
+
+            <Box
+              sx={{
+                width: 200,
+                height: 200,
+                mx: 'auto',
+                borderRadius: '1rem',
+                overflow: 'hidden',
+                boxShadow: 3,
+              }}
+            >
+              <Image
+                src="/images/instagramQR.jpeg"
+                alt="QR Code Instagram Nana Head Spa"
+                width={200}
+                height={200}
+                style={{ objectFit: 'cover' }}
+              />
+            </Box>
+          </Box>*/}
+
+          {/* Bouton Réserver via Instagram */}
+          {/*<Box sx={{ mt: 6 }}>
+            <Button
+              component={Link}
+              href="https://ig.me/m/nana_head_spa"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                borderRadius: '2rem',
+                px: 4,
+                py: 1.5,
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+                transition: 'background-color 0.3s',
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark,
+                  color: 'primary.main'
+                },
+              }}
+            >
+              Réserver sur Instagram
+            </Button>
+          </Box>*/}
         </Box>
       </Container>
     </>

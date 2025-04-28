@@ -116,7 +116,7 @@ export default function Testimonials() {
           <Typography
             variant="body1"
             sx={{
-              color: theme.palette.text.secondary,
+              color: theme.palette.text.primary,
               fontFamily: 'Poppins',
             }}
           >

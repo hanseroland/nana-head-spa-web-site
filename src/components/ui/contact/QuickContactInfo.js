@@ -42,7 +42,7 @@ const QuickContactInfo = () => {
         maxWidth: '1000px',
         mx: 'auto',
         textAlign: 'center',
-        mb: 8,
+        mb: 4,
       }}
     >
       <Stack

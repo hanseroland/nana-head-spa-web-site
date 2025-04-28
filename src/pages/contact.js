@@ -5,6 +5,7 @@ import QuickContactInfo from "@/components/ui/contact/QuickContactInfo";
 import ContactForm from "@/components/ui/contact/ContactForm";
 import GoogleMapEmbed from "@/components/ui/contact/GoogleMapEmbed";
 import CallToActionReservation from "@/components/ui/contact/CallToActionReservation";
+import SocialMediaContact from "@/components/ui/contact/SocialMediaContact";
 
 
 
@@ -32,9 +33,10 @@ export default function Contact() {
 
             <Container maxWidth="lg">
                 <QuickContactInfo/>
-                <ContactForm/>
+                <SocialMediaContact/>
+                {/*<ContactForm/>*/}
                 <GoogleMapEmbed/>
-                <CallToActionReservation/>
+                {/*<CallToActionReservation/>*/}
             </Container>
             
             

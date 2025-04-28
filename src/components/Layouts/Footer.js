@@ -1,24 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import InputLabel from '@mui/material/InputLabel';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import TwitterIcon from '@mui/icons-material/X';
-import { Instagram } from '@mui/icons-material';
+import { Facebook, Instagram } from '@mui/icons-material';
 
 function Copyright() {
     return (
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
             {'Copyright © '}
             <Link color="text.secondary" href="#">
-                SPA-HEAD
+                NANA HEAD SPA by HRP
             </Link>
             &nbsp;
             {new Date().getFullYear()}
@@ -67,9 +62,9 @@ export default function Footer() {
                                     mr: 4
                                 }}
                             >
-                                SPA-HEAD
+                                NANA HEAD SPA
                             </Typography>
-                            <Typography
+                            {/*<Typography
                                 variant="body2"
                                 gutterBottom
                                 sx={{ fontWeight: 600, mt: 2 }}
@@ -104,7 +99,7 @@ export default function Footer() {
                                 >
                                     S&apos;abonner
                                 </Button>
-                            </Stack>
+                            </Stack>*/}
                         </Box>
                     </Box>
                     <Box
@@ -117,13 +112,10 @@ export default function Footer() {
                         <Typography variant="body2" sx={{ fontWeight: '600' }}>
                             Produits
                         </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
+                        <Link color="text.secondary" variant="body2" href="/formules">
                             Formules
                         </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Témoignages
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
+                        <Link color="text.secondary" variant="body2" href="/reservations">
                             Reservations
                         </Link>
                     </Box>
@@ -137,11 +129,11 @@ export default function Footer() {
                         <Typography variant="body2" sx={{ fontWeight: '600' }}>
                           Entreprise
                         </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
+                        <Link color="text.secondary" variant="body2" href="/presentation">
                           Présentation
                         </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                          Blog
+                        <Link color="text.secondary" variant="body2" href="/nouveautes">
+                          Nouveautés / Ofrres
                         </Link>
                        
                     </Box>
@@ -161,7 +153,7 @@ export default function Footer() {
                         <Link color="text.secondary" variant="body2" href="#">
                             Confidentialité
                         </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
+                        <Link color="text.secondary" variant="body2" href="/contact">
                             Contact
                         </Link>
                     </Box>
@@ -197,7 +189,7 @@ export default function Footer() {
                         <IconButton
                             color="inherit"
                             size="small"
-                            href="#"
+                            href="https://www.instagram.com/nana_head_spa?igsh=MWhnbWVuY3F0YTVodA%3D%3D&utm_source=qr"
                             aria-label="Instagram"
                             sx={{ alignSelf: 'center' }}
                         >
@@ -206,20 +198,11 @@ export default function Footer() {
                         <IconButton
                             color="inherit"
                             size="small"
-                            href="#"
+                            href="https://www.facebook.com/share/1Bz63Ahy2u/?mibextid=wwXIfr"
                             aria-label="X"
                             sx={{ alignSelf: 'center' }}
                         >
-                            <TwitterIcon />
-                        </IconButton>
-                        <IconButton
-                            color="inherit"
-                            size="small"
-                            href="#"
-                            aria-label="LinkedIn"
-                            sx={{ alignSelf: 'center' }}
-                        >
-                            <LinkedInIcon />
+                            <Facebook />
                         </IconButton>
                     </Stack>
                 </Box>

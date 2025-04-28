@@ -39,6 +39,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
     const theme = useTheme();
     const router = useRouter(); // ✅ pour accéder au chemin actif
     const currentPath = router.pathname;
+    
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -48,8 +49,8 @@ export default function Navbar({ themeMode, setThemeMode }) {
         setThemeMode((prevMode) => (prevMode === 'dark' ? 'light' : 'dark'));
     };
 
-    const navLinks = [ 
-        { label: 'Presentation', href: '/presentation' }, 
+    const navLinks = [
+        { label: 'Presentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
         { label: 'Reservations', href: '/reservations' },
         { label: 'Nouveautés', href: '/nouveautes' },
@@ -96,20 +97,22 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     <Link key={link.label} href={link.href} passHref>
                                         <Button
                                             variant="text"
-                                            color="info"
+                                            color="primary"
                                             size="medium"
                                             sx={{
                                                 fontWeight: 600,
-                                                fontFamily: 'Poppins',
+                                                fontFamily: 'sans-serif',
                                                 textTransform: 'none',
                                                 color: isActive ? 'primary.main' : 'text.primary',
-                                                borderBottom: isActive ? '2px solid' : 'none',
+                                                borderBottom: isActive ? '2px solid' : '2px solid transparent',
                                                 borderColor: isActive ? 'primary.main' : 'transparent',
                                                 borderRadius: 0,
+                                                backgroundColor: 'transparent',
+                                                transition: 'all 0.3s ease',
                                                 '&:hover': {
-                                                    color: 'primary.main',
-                                                    borderColor: 'primary.main',
+                                                    color: 'custom.bubble2',
                                                     borderBottom: '2px solid',
+                                                    borderColor: 'primary.main',
                                                 },
                                             }}
                                         >
@@ -140,8 +143,12 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                 fontWeight: 600,
                                 fontFamily: 'Poppins',
                                 textTransform: 'none',
-                                color: 'text.primary',
-                                '&:hover': { color: 'primary.main' },
+                                backgroundColor: theme.palette.primary.main,
+                                color: theme.palette.primary.contrastText,
+                                '&:hover': {
+                                    backgroundColor: theme.palette.primary.dark,
+                                    color: 'primary.main'
+                                },
                             }}
                         >
                             S&apos;inscrire

@@ -126,7 +126,7 @@ export default function Hero() {
               color: "background.default",
               mb: 4,
               fontSize: { xs: "1rem", sm: "1.2rem" },
-              textShadow: '1px 1px 3px rgba(0, 0, 0, 0.62)', // Douce ombre pour lisibilité
+              //textShadow: '1px 1px 3px rgba(0, 0, 0, 0.62)', // Douce ombre pour lisibilité
             }}
           >
             Offrez-vous une expérience de bien-être unique et relaxante.

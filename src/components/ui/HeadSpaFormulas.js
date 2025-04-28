@@ -87,7 +87,7 @@ const FormulaCard = ({ formula }) => {
                   fontSize: { xs: '15px', sm: '1.5rem', md: '1.5rem' },
                 }}
               >
-                {formula.title}
+                {formula.title} {" "}
                 {
                   formula.etiquette && (
                     <Chip
@@ -101,7 +101,7 @@ const FormulaCard = ({ formula }) => {
                     />
                   )
                 }
-                -  ⏱ {formula.duration}
+                {" "} -  ⏱ {formula.duration}
               </Typography>
 
             </Box>

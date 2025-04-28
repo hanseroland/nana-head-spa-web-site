@@ -2,6 +2,6 @@
 import darkTheme from './darkTheme';
 import lightTheme from './lighTheme';
 
-export const getAppTheme = (mode = 'light') => {
-  return mode === 'dark' ? darkTheme : lightTheme;
+export const getAppTheme = (mode = 'dark') => {
+  return mode === 'light' ? lightTheme : darkTheme;
 };
