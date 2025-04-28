@@ -45,11 +45,11 @@ export default function Navbar({ themeMode, setThemeMode }) {
     };
 
     const toggleTheme = () => {
-        setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        setThemeMode((prevMode) => (prevMode === 'dark' ? 'light' : 'light'));
     };
 
     const navLinks = [ 
-        { label: 'Presentation', href: '/presentation' },
+        { label: 'Presentation', href: '/presentation' }, 
         { label: 'Formules', href: '/formules' },
         { label: 'Reservations', href: '/reservations' },
         { label: 'Nouveautés', href: '/nouveautes' },
