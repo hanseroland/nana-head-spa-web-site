@@ -110,7 +110,7 @@ function HomeBlogSection() {
               color: theme.palette.primary.main
             }}
           >
-            Conseils bien-être ✨
+            Nouveautés / Offres du moments ✨
           </MotionTypography>
           <Typography
             variant="body1"
@@ -132,7 +132,7 @@ function HomeBlogSection() {
             size="large"
             color="primary"
             endIcon={<ArrowForwardIcon />}
-            onClick={() => router.push("/blog")}
+            onClick={() => router.push("/nouveautes")}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -152,7 +152,7 @@ function HomeBlogSection() {
               },
             }}
           >
-            Lire le blog
+            Voir les nouveautés
           </MotionButton>
         </Box>
       </Container>

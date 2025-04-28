@@ -10,12 +10,12 @@ const philosophyData = [
   {
     icon: <SpaRounded sx={{ fontSize: 40, color: "#d33e68" }} />,
     title: "Bien-être holistique",
-    description: "Nous prenons soin de votre corps, de votre esprit et de vos émotions pour un équilibre global et durable.",
+    description: "Je prends soin de votre tête, de votre esprit et de vos émotions pour un équilibre global et durable.",
   },
   {
     icon: <EmojiNatureRounded sx={{ fontSize: 40, color: "#d33e68" }} />,
     title: "Beauté naturelle",
-    description: "Nous valorisons la simplicité, la douceur et la beauté authentique, sans artifices.",
+    description: "Je valorise la douceur, la simplicité et la beauté authentique sans artifices.",
   },
   {
     icon: <FavoriteBorderRounded sx={{ fontSize: 40, color: "#d33e68" }} />,
@@ -48,7 +48,7 @@ function PhilosophySection() {
         viewport={{ once: true }}
         mb={6}
       >
-        Notre philosophie
+        Ma philosophie
       </MotionTypography>
 
       <Grid container spacing={2} justifyContent="center">

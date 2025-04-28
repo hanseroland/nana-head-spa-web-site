@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { Box, Container, Pagination } from "@mui/material";
-import BlogHeader from "@/src/components/ui/blog/BlogHeader";
-import SearchBar from "@/src/components/ui/blog/SearchBar";
-import CategoryChips from "@/src/components/ui/blog/CategoryChips";
-import BlogGrid from "@/src/components/ui/blog/BlogGrid";
+import BlogHeader from "@/components/ui/blog/BlogHeader";
+import SearchBar from "@/components/ui/blog/SearchBar";
+import CategoryChips from "@/components/ui/blog/CategoryChips";
+import BlogGrid from "@/components/ui/blog/BlogGrid";
 import { useMemo, useState } from "react";
 
 const POSTS_PER_PAGE = 4;
@@ -114,8 +114,8 @@ export default function Blog() {
     return (
         <>
             <Head>
-                <title>Blog | NANA HEAD SPA</title>
-                <meta name="description" content="Découvrez nos articles sur le bien-être et la relaxation." />
+                <title>Nouveautés | NANA HEAD SPA</title>
+                <meta name="description" content="Découvrez mes nouveautés / offres du moment" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <Box

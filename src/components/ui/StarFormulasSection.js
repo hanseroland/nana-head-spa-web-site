@@ -1,23 +1,24 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, Button, Card, CardMedia, CardContent, useTheme, useMediaQuery, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, Button, Card, CardMedia, CardContent, useTheme, useMediaQuery, List, ListItem, ListItemText, Chip } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 
 const formulas = [
   {
     id: 1,
-    title: 'Formule éclat express',
+    title: 'Formule : Eclat express',
+    etiquette: 'Découverte',
     price: '60€',
     duration: '45 min',
     image: '/images/pexels-karolina-grabowska-4041386.jpg',
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🖌️ Brosses spécifique pour activer la circulation du sang',
+      '🧽 Brosses spécifique pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
-      '🚿 Rinçage classique',
+      '+ 🚿 Rinçage classique',
       '+ 🧴 2 Shampooings',
       '+ 💧 Après-shampooing',
     ],
@@ -25,15 +26,16 @@ const formulas = [
   {
     id: 2,
     title: 'Formule : Sérénité Absolue',
+    etiquette: '',
     price: '80€',
     duration: '60 min',
     image: '/images/pexels-hannah-barata-776560167-27925507.jpg',
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🖌️ Brosses spécifiques pour activer la circulation du sang',
+      '🧽 Brosses spécifiques pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
-      '🤲 Massage visage & haut du corps pour soulager les tensions',
+      "🤲 Massage visage, des cervicales, jusqu'au bout des doigts",
       '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
       '🚿 Rinçage sous l’arche',
       '+ 🧴 2 shampooings + après-shampooing',
@@ -42,22 +44,22 @@ const formulas = [
   {
     id: 3,
     title: "Formule : Renaissance suprême",
+    etiquette: '',
     price: "120€",
     duration: "1h30 min",
     image: "/images/pexels-elly-fairytale-3865560.jpg",
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🖌️ Brosses spécifiques pour activer la circulation du sang',
+      '🧽 Brosses spécifiques pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
-      '🤲 Massage visage & haut du corps pour soulager les tensions',
+      "🤲 Massage visage, des cervicales, jusqu'au bout des doigts",
       '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
       '🚿 Rinçage sous l’arche',
       '+ 🧴 2 shampooings + après-shampooing',
     ],
   },
 ];
-
 
 const StarFormulasSection = () => {
   const theme = useTheme();
@@ -78,7 +80,7 @@ const StarFormulasSection = () => {
         component="h2"
         sx={{ color: theme.palette.primary.main, mb: 4, fontWeight: 600, textAlign: 'center' }}
       >
-        Nos formules stars
+        Mes formules stars
       </Typography>
 
       <Box
@@ -109,7 +111,18 @@ const StarFormulasSection = () => {
 
             <CardContent>
               <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
-                {formula.title}
+                {formula.title} {" "}
+                {formula.etiquette && (
+                  <Chip
+                    label={formula.etiquette}
+                    sx={{
+                      backgroundColor: theme.palette.primary.main,
+                      color: 'white',
+                      fontWeight: 600,
+                      marginTop: '0.5rem',
+                    }}
+                  />
+                )}
               </Typography>
               <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontWeight: 600, mt: 1 }}>
                 {formula.price} ・ {formula.duration}
@@ -131,13 +144,6 @@ const StarFormulasSection = () => {
                 ))}
               </List>
             </CardContent>
-            <CardMedia
-              component="img"
-              height="220"
-              image={formula.image}
-              alt={formula.title}
-              sx={{ objectFit: 'cover' }}
-            />
           </Card>
         ))}
       </Box>

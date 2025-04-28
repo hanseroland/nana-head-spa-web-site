@@ -3,7 +3,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles"; // Importer le thème
 import Bubble from "./Bubble";
-import globalVariables from "@/src/config/globalVariables";
+import globalVariables from "@/config/globalVariables";
 import { useRouter } from "next/router";
 
 

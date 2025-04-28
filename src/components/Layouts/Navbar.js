@@ -16,7 +16,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Link from 'next/link';
 import { Typography, useTheme } from '@mui/material';
 import { useRouter } from 'next/router'; // ✅ import pour détecter la page active
-import globalVariables from '@/src/config/globalVariables';
+import globalVariables from '@/config/globalVariables';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -48,11 +48,11 @@ export default function Navbar({ themeMode, setThemeMode }) {
         setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
     };
 
-    const navLinks = [
+    const navLinks = [ 
         { label: 'Presentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
         { label: 'Reservations', href: '/reservations' },
-        { label: 'Blog', href: '/blog' },
+        { label: 'Nouveautés', href: '/nouveautes' },
         { label: 'Contact', href: '/contact' }
     ];
 

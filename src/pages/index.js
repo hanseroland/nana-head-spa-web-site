@@ -1,14 +1,13 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import Hero from "../components/ui/Hero";
-import SpaIntroSection from "../components/ui/SpaIntroSection";
+import Hero from "@/components/ui/Hero";
+import SpaIntroSection from "@/components/ui/SpaIntroSection";
 import StarFormulasSection from "../components/ui/StarFormulasSection";
-import Testimonials from "../components/ui/Testimonials";
-import MainContent from "../components/ui/blog/MainContent";
-import HomeBlogSection from "../components/ui/blog/HomeBlogSection";
-import globalVariables from "../config/globalVariables";
+import Testimonials from "@/components/ui/Testimonials";
+import HomeBlogSection from "@/components/ui/blog/HomeBlogSection";
+import globalVariables from "@/config/globalVariables";
+import InfiniteSlider from "@/components/ui/InfiniteSlider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +37,7 @@ export default function Home() {
          <StarFormulasSection/>
          <Testimonials/>
          <HomeBlogSection/>
+         <InfiniteSlider/>
         </main>
        
       </div>

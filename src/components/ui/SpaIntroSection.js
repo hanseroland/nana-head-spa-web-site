@@ -4,7 +4,7 @@ import { Box, Typography, Button, useTheme, useMediaQuery } from '@mui/material'
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import globalVariables from '@/src/config/globalVariables';
+import globalVariables from '@/config/globalVariables';
 
 const SpaIntroSection = () => {
   const theme = useTheme();
@@ -58,15 +58,17 @@ const SpaIntroSection = () => {
       {/* Texte */}
       <Box sx={{ flex: 1 }}>
         <Typography variant="h4" component="h2" sx={{ fontWeight: 600, color: theme.palette.primary.main, mb: 2 }}>
-          L’univers du {globalVariables.siteName}
+          L’univers de {globalVariables.siteName}
         </Typography>
         <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 4, whiteSpace: 'pre-line' }}>
           Offrez à vos cheveux et votre esprit une pause bien méritée.{"\n"}
-          Notre {globalVariables.siteName}, pensé exclusivement pour les femmes, mêle douceur, détente et soins personnalisés.{"\n"}
-          Chaque geste, chaque parfum, chaque son est conçu pour apaiser vos tensions et raviver votre éclat naturel.{"\n"}
-          Loin du stress du quotidien, entrez dans une bulle de sérénité et de beauté.{"\n"}
-          Découvrez une ambiance unique, subtilement parfumée et enveloppée de teintes douces.{"\n"}
-          Laissez-vous chouchouter par des rituels capillaires venus du Japon, dans un cocon girly, doux et relaxant.
+          Chez {globalVariables.siteName}, on accueille aussi bien les femmes aue les hommes pensé exclusivement pour les femmes dans un cocon apaisant ou le bien être est au coeur de tout.{"\n"}
+          Ici, chaque soin du cuir chevelur est pensé pour soulager les tensions, purifier l'esprit et sublimer la chevelure.{"\n"}
+          Inspirée des rituels Japonais, mes massages capillaires allient détente profonde et soins personnalisés.{"\n"}
+          Dans une ambiance douce et chaleureuse, vous êtes écouté(e)s chouchouté(e)s et respecté(e)s.{"\n"}{"\n"}
+
+          <b>NANA HEAD SPA, c'est plus qu'un soin : c'est une parenthèse rien que pour vous.</b>{"\n"} 
+          
         </Typography>
         <Button
           color="primary"

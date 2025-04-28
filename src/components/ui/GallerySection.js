@@ -6,12 +6,14 @@ import Masonry from '@mui/lab/Masonry';
 import { motion } from 'framer-motion';
 
 const images = [
-  { src: '/images/nana-head.jpeg', label: "Nael responsable de Nana Head Spa" },
+  { src: '/images/nana-head.jpeg', label: "Nawël responsable de Nana Head Spa" },
   { src: '/images/spa-nana-head.jpeg', label: 'Interieur Nana Head Spa' },
-  { src: '/images/pexels-karolina-grabowska-4041386.jpg', label: 'Les huiles' },
-  { src: '/images/usen-parmanov-JJi82Ayk_kQ-unsplash.jpg', label: 'Moments de détente' },
-  { src: '/images/pexels-hannah-barata-776560167-27925507.jpg', label: 'Détente absolue' },
-  { src: '/images/pexels-arina-krasnikova-6663368.jpg', label: 'Ambiance relax' },
+  { src: '/images/archenana-head-spa.jpeg', label: 'Interieur Nana Head Spa' },
+  { src: '/images/presentation-nana-head.jpeg', label: 'Interieur Nana Head Spa' },
+  { src: '/images/arche-nana-head.jpeg', label: 'Arche' },
+  { src: '/images/presentation-nana-head-spa.jpeg', label: 'Interieur Nana Head Spa' },
+ 
+
 ];
 
 const GallerySection = () => {

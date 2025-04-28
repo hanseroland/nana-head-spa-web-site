@@ -98,7 +98,7 @@ function AboutSection() {
             transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            Nawël
+            Nawël ❤️
           </MotionTypography>
         </Grid>
 

@@ -30,7 +30,7 @@ function BlogHeader() {
             fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
           }}
         >
-          Bienvenue sur notre Blog
+          Découvrez mes nouveautés / offres du moment
         </Typography>
       </motion.div>
 

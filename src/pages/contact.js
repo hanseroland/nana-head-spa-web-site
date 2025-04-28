@@ -1,5 +1,10 @@
 import Head from "next/head";
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
+import ReusableHero from "@/components/ui/ReusableHero";
+import QuickContactInfo from "@/components/ui/contact/QuickContactInfo";
+import ContactForm from "@/components/ui/contact/ContactForm";
+import GoogleMapEmbed from "@/components/ui/contact/GoogleMapEmbed";
+import CallToActionReservation from "@/components/ui/contact/CallToActionReservation";
 
 
 
@@ -17,10 +22,19 @@ export default function Contact() {
                 <meta name="description" content="Découvrez nos spa head pour le bien-être et la relaxation." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-           
+          
+            <ReusableHero
+                image="/images/archenana-head-spa.jpeg"
+                title="Un moment de bien-être commence par un premier contact"
+                subtitle="Je suis là pour répondre à vos questions et planifier votre rendez-vous."
+
+            />
 
             <Container maxWidth="lg">
-                <Typography variant="h2" align="center"> Contact  </Typography>
+                <QuickContactInfo/>
+                <ContactForm/>
+                <GoogleMapEmbed/>
+                <CallToActionReservation/>
             </Container>
             
             
