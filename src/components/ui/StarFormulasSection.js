@@ -117,7 +117,7 @@ const StarFormulasSection = () => {
                     label={formula.etiquette}
                     sx={{
                       backgroundColor: theme.palette.primary.main,
-                      color: 'white',
+                      color: '#000',
                       fontWeight: 600,
                       marginTop: '0.5rem',
                     }}

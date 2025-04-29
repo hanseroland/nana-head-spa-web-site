@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, useTheme, Typography, Box, Chip, List, ListItem, ListItemText, CardActions, Divider } from '@mui/material';
+import { Card, CardContent, useTheme, Typography, Box, Chip, List, ListItem, ListItemText} from '@mui/material';
 import { motion } from 'framer-motion';
 import Grid from '@mui/material/Grid';
 import { useRouter } from 'next/router';
@@ -94,7 +94,7 @@ const FormulaCard = ({ formula }) => {
                       label={formula.etiquette}
                       sx={{
                         backgroundColor: theme.palette.primary.main,
-                        color: 'white',
+                        color: '#000',
                         fontWeight: 600,
                         marginTop: '0.5rem',
                       }}

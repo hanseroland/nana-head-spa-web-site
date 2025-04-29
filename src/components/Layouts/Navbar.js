@@ -14,9 +14,8 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Link from 'next/link';
-import { Typography, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { useRouter } from 'next/router'; // ✅ import pour détecter la page active
-import globalVariables from '@/config/globalVariables';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -39,7 +38,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
     const theme = useTheme();
     const router = useRouter(); // ✅ pour accéder au chemin actif
     const currentPath = router.pathname;
-    
+
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -72,19 +71,19 @@ export default function Navbar({ themeMode, setThemeMode }) {
                 <StyledToolbar variant="dense" disableGutters>
                     {/* LOGO */}
                     <Link href="/" passHref>
-                        <Typography
-                            variant="h6"
+                        <Box
+                            component="img"
+                            src="/images/logo-nana-head.png" // <-- ton chemin de logo ici (mets /logo.svg, /logo.png, ou ce que tu veux)
+                            alt="Nana Head Spa Logo"
                             sx={{
-                                fontFamily: 'Poppins',
-                                fontWeight: 'bold',
-                                color: 'primary.main',
-                                display: { xs: 'none', md: 'flex' },
+                                height: 80, // adapte la taille du logo si besoin
+                                width: 'auto',
+                                borderRadius: '50%',
+                                display: { xs: 'none', md: 'block' },
                                 mr: 4,
-                                textShadow: '1px 1px 3px rgba(255, 0, 144, 0.29)',
+                                cursor: 'pointer',
                             }}
-                        >
-                            {globalVariables.siteName}
-                        </Typography>
+                        />
                     </Link>
 
                     <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
