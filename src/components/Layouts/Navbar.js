@@ -52,7 +52,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
         { label: 'Presentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
         { label: 'Reservations', href: '/reservations' },
-        { label: 'Nouveautés', href: '/nouveautes' },
+       // { label: 'Nouveautés', href: '/nouveautes' },
         { label: 'Contact', href: '/contact' }
     ];
 
@@ -200,9 +200,26 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                 </Box>
 
                                 {/* LIENS MOBILE */}
+                                <Link  href="/" passHref>
+                                    <MenuItem
+                                        sx={{
+                                            fontWeight: 600,
+                                            fontFamily: 'Poppins',
+                                            textTransform: 'none',
+                                            color:'primary.main' ,
+                                            backgroundColor: 'transparent',
+                                            '&:hover': {
+                                                color: 'text.primary',
+                                               
+                                            },
+                                        }}
+                                    >
+                                        Accueil
+                                    </MenuItem>
+                                    </Link>
+                                
                                 {navLinks.map((link) => {
                                     const isActive = currentPath === link.href;
-
                                     return (
                                         <Link key={link.label} href={link.href} passHref>
                                             <MenuItem

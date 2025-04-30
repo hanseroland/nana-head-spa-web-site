@@ -112,7 +112,7 @@ export default function Hero() {
               textShadow: '1px 1px 3px rgba(0, 0, 0, 0.62)',
             }}
           >
-            Bienvenue au <span style={{ color: theme.palette.primary.main }}>{globalVariables.siteName}</span>
+            Bienvenue chez <span style={{ color: theme.palette.primary.main }}>{globalVariables.siteName}</span>
           </Typography>
           <Typography
             variant="body1"

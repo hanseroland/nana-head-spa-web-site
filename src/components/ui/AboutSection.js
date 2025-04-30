@@ -90,8 +90,8 @@ function AboutSection() {
           {/* Signature manuscrite */}
           <MotionTypography
             variant="h5"
-            fontFamily="'Pacifico', cursive"
-            color="#E59AA6"
+            fontFamily="Poppins"
+            color="text.secondary"
             mt={4}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}

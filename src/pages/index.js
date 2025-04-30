@@ -4,10 +4,10 @@ import styles from "@/styles/Home.module.css";
 import Hero from "@/components/ui/Hero";
 import SpaIntroSection from "@/components/ui/SpaIntroSection";
 import StarFormulasSection from "../components/ui/StarFormulasSection";
-import Testimonials from "@/components/ui/Testimonials";
 import HomeBlogSection from "@/components/ui/blog/HomeBlogSection";
 import globalVariables from "@/config/globalVariables";
 import InfiniteSlider from "@/components/ui/InfiniteSlider";
+import TestimonialsSection from "@/components/ui/TestimonialsSection";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,8 +35,8 @@ export default function Home() {
         <main className={styles.main}>
          <SpaIntroSection/>
          <StarFormulasSection/>
-         <Testimonials/>
-         <HomeBlogSection/>
+         <TestimonialsSection />
+         {/*<HomeBlogSection/>*/}
          <InfiniteSlider/>
         </main>
        

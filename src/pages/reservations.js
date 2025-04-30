@@ -73,18 +73,18 @@ const ReservationPage = () => {
             Réservation dès maintenant votre séance
           </MotionTypography>
 
-          <Typography variant="h6" align="center"> Choisissez une date dans le calendrier ci-dessous </Typography>
-          <BookingCalendar onDateClick={handleDateClick} /> {/* 👈 Passe la fonction handleDateClick au calendrier */}
+          <Typography variant="h6" align="center"> Cliauez sur le bouton ci-dessous </Typography>
+           {/*<BookingCalendar onDateClick={handleDateClick} />*/} {/* 👈 Passe la fonction handleDateClick au calendrier */}
 
           {/* 👈 Affiche la modale conditionnellement */}
-          <BookingModal
+          {/* <BookingModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             selectedDate={selectedDate}
-          />
+          /> */}
 
           {/* QR Code pour Instagram */}
-          {/*<Box sx={{ mt: 3 }}>
+          <Box sx={{ mt: 3 }}>
             <Typography
               variant="h6"
               component="p"
@@ -111,10 +111,10 @@ const ReservationPage = () => {
                 style={{ objectFit: 'cover' }}
               />
             </Box>
-          </Box>*/}
+          </Box>
 
           {/* Bouton Réserver via Instagram */}
-          {/*<Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 6 }}>
             <Button
               component={Link}
               href="https://ig.me/m/nana_head_spa"
@@ -123,7 +123,7 @@ const ReservationPage = () => {
               variant="contained"
               sx={{
                 backgroundColor: theme.palette.primary.main,
-                color: '#fff',
+                color: '#000',
                 borderRadius: '2rem',
                 px: 4,
                 py: 1.5,
@@ -133,13 +133,13 @@ const ReservationPage = () => {
                 transition: 'background-color 0.3s',
                 '&:hover': {
                   backgroundColor: theme.palette.primary.dark,
-                  color: 'primary.main'
+                  color: '#000'
                 },
               }}
             >
               Réserver sur Instagram
             </Button>
-          </Box>*/}
+          </Box>
         </Box>
       </Container>
     </>

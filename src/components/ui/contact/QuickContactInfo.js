@@ -21,8 +21,8 @@ const contactDetails = [
   {
     icon: <Email sx={{ fontSize: 40 }} />,
     label: 'E-mail',
-    value: 'contact@tonspa.com',
-    link: 'mailto:contact@tonspa.com',
+    value: 'nawel22@laposte.net',
+    link: 'mailto:nawel22@laposte.net',
   },
 ];
 

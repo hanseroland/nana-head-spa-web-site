@@ -70,8 +70,8 @@ const SpaIntroSection = () => {
         </Typography>
         <Typography variant="body1" sx={{fontSize:'15px', color: theme.palette.text.primary, mb: 4, whiteSpace: 'pre-line' }}>
           Offrez à vos cheveux et votre esprit une pause bien méritée.{"\n"}
-          Chez {globalVariables.siteName}, on accueille aussi bien les femmes aue les hommes pensé exclusivement pour les femmes dans un cocon apaisant ou le bien être est au coeur de tout.{"\n"}
-          Ici, chaque soin du cuir chevelur est pensé pour soulager les tensions, purifier l'esprit et sublimer la chevelure.{"\n"}
+          Chez {globalVariables.siteName}, on accueille aussi bien les femmes que les hommes dans un cocon apaisant, ou le bien être est au coeur de tout.{"\n"}
+          Ici, chaque soin du cuir chevelu est pensé pour soulager les tensions, purifier l'esprit et sublimer la chevelure.{"\n"}
           Inspirée des rituels Japonais, mes massages capillaires allient détente profonde et soins personnalisés.{"\n"}
           Dans une ambiance douce et chaleureuse, vous êtes écouté(e)s chouchouté(e)s et respecté(e)s.{"\n"}{"\n"}
 

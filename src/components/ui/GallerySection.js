@@ -89,7 +89,7 @@ const GallerySection = () => {
                 backdropFilter: 'blur(4px)',
               }}
             >
-              {image.label}
+             
             </Box>
           </motion.div>
         ))}
