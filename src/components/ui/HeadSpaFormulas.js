@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, useTheme, Typography, Box, Chip, List, ListItem, ListItemText} from '@mui/material';
+import { Card, CardContent, useTheme, Typography, Box, Chip, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
 import Grid from '@mui/material/Grid';
 import { useRouter } from 'next/router';
@@ -16,12 +16,13 @@ const formulas = [
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🧽 Brosses spécifique pour activer la circulation sanguine',
+      '- Brosses spécifique pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
       '+ 🚿 Rinçage classique',
       '+ 🧴 2 Shampooings',
       '+ 💧 Après-shampooing',
     ],
+    raison: "Une pause bien-être express qui redonne vie aux cheveux et booste l'énergie en moins d'une heure. Parfait pour les personnes pressées!"
   },
   {
     id: 2,
@@ -33,13 +34,14 @@ const formulas = [
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🧽 Brosses spécifiques pour activer la circulation sanguine',
+      '- Brosses spécifiques pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
       "🤲 Massage visage, des cervicales, jusqu'au bout des doigts",
       '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
       '🚿 Rinçage sous l’arche',
       '+ 🧴 2 shampooings + après-shampooing',
     ],
+    raison: "Ce soin est parfait pour celles qui souhaitent s'offrir un moment de lâcher-prise tout en revitalisant leur chevelure. Un moment suspendu qui relie relaxation et beauté!"
   },
   {
     id: 3,
@@ -51,13 +53,14 @@ const formulas = [
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🧽 Brosses spécifiques pour activer la circulation sanguine',
+      '- Brosses spécifiques pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
       "🤲 Massage visage, des cervicales, jusqu'au bout des doigts",
       '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
       '🚿 Rinçage sous l’arche',
       '+ 🧴 2 shampooings + après-shampooing',
     ],
+    raison: 'Cette formule complète offre une parenthèse de bien-être inégalée. On en ressort avec un esprit apaisé et des cheveux resplendissants! Une expérience unique, parfaite pour un cadeau ou un moment de ressourcement total.'
   },
 ];
 
@@ -117,38 +120,55 @@ const FormulaCard = ({ formula }) => {
             />
           </Box>
           <Box
-            display={{ xs: 'block', sm: 'flex', md: 'flex' }}
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ height: '100%' }}
-          >
-            <List dense sx={{ pl: 0.1 }}>
-              {formula.soins.map((soin, index) => (
-                <ListItem key={index} disableGutters sx={{ py: 0.1 }}>
-                  <ListItemText
-                    primary={soin}
-                    primaryTypographyProps={{
-                      fontSize: '0.875rem',
-                      color: theme.palette.text.secondary,
 
-                    }}
-                  />
-                </ListItem>
-              ))}
-            </List>
+          >
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent={{ xs: 'flex-start', sm: 'flex-end', md: 'flex-end' }}
-              alignItems="start"
-              height={{ xs: '100%', sm: '200px', md: '200px' }}
+              display={{ xs: 'block', sm: 'flex', md: 'flex' }}
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ height: '100%' }}
             >
-              <ButtonLink
-                link={`/#/${formula.id}`}
-                title="Reserver maintenant"
-              />
+              <List dense sx={{ pl: 0.1 }}>
+                {formula.soins.map((soin, index) => (
+                  <ListItem key={index} disableGutters sx={{ py: 0.1 }}>
+                    <ListItemText
+                      primary={soin}
+                      primaryTypographyProps={{
+                        fontSize: '0.875rem',
+                        color: theme.palette.text.secondary,
+
+                      }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent={{ xs: 'flex-start', sm: 'flex-end', md: 'flex-end' }}
+                alignItems="start"
+                height={{ xs: '100%', sm: '200px', md: '200px' }}
+              >
+                <ButtonLink
+                  link={`/#/${formula.id}`}
+                  title="Reserver maintenant"
+                />
+              </Box>
             </Box>
 
+            
+            <Box display="block" justifyContent="space-between" alignItems="center">
+              <Typography variant="h6" 
+               
+                sx={{ color: theme.palette.primary.main, mt: 4, fontWeight: 600, textAlign: 'left' }}
+              >
+                Pourquoi on l'adore ?
+              </Typography>
+              <Typography variant="body2" sx={{ color: theme.palette.primary.main, fontWeight: 600, mt: 1 }}>
+                {formula.raison}
+              </Typography>
+            </Box>
+            <Divider sx={{ my: 2 }} />
           </Box>
 
 

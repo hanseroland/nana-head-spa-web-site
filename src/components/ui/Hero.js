@@ -215,8 +215,12 @@ export default function Hero() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                transform: "scale(1.1) rotate(-10deg)", // Zoom + inclinaison vers la gauche
+                transformOrigin: "center",
               }}
             />
+
+             
           </Box>
         </Box>
       </Container>

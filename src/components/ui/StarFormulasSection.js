@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, Button, Card, CardMedia, CardContent, useTheme, useMediaQuery, List, ListItem, ListItemText, Chip } from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, useTheme, useMediaQuery, List, ListItem, ListItemText, Chip, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 
@@ -16,12 +16,13 @@ const formulas = [
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🧽 Brosses spécifique pour activer la circulation sanguine',
+      '- Brosses spécifique pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
       '+ 🚿 Rinçage classique',
       '+ 🧴 2 Shampooings',
       '+ 💧 Après-shampooing',
     ],
+    raison:"Une pause bien-être express qui redonne vie aux cheveux et booste l'énergie en moins d'une heure. Parfait pour les personnes pressées!"
   },
   {
     id: 2,
@@ -33,13 +34,14 @@ const formulas = [
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🧽 Brosses spécifiques pour activer la circulation sanguine',
+      '- Brosses spécifiques pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
       "🤲 Massage visage, des cervicales, jusqu'au bout des doigts",
       '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
       '🚿 Rinçage sous l’arche',
       '+ 🧴 2 shampooings + après-shampooing',
     ],
+    raison:"Ce soin est parfait pour celles qui souhaitent s'offrir un moment de lâcher-prise tout en revitalisant leur chevelure. Un moment suspendu qui relie relaxation et beauté!"
   },
   {
     id: 3,
@@ -51,13 +53,14 @@ const formulas = [
     soins: [
       '🪞 Diagnostic capillaire',
       '💆‍♀️ Massage du crâne relaxant',
-      '🧽 Brosses spécifiques pour activer la circulation sanguine',
+      '- Brosses spécifiques pour activer la circulation sanguine',
       '🌿 Huiles essentielles adaptées',
       "🤲 Massage visage, des cervicales, jusqu'au bout des doigts",
       '🌫️ Soin vapeur drainant (cellules mortes & sébum)',
       '🚿 Rinçage sous l’arche',
       '+ 🧴 2 shampooings + après-shampooing',
     ],
+    raison:'Cette formule complète offre une parenthèse de bien-être inégalée. On en ressort avec un esprit apaisé et des cheveux resplendissants! Une expérience unique, parfaite pour un cadeau ou un moment de ressourcement total.'
   },
 ];
 
@@ -143,6 +146,16 @@ const StarFormulasSection = () => {
                   </ListItem>
                 ))}
               </List>
+              <Divider sx={{ my: 2 }} />
+              <Box display="block" justifyContent="space-between" alignItems="center">
+                <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+                    Pourquoi on l'adore ?
+                </Typography>
+                <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontWeight: 600, mt: 1 }}>
+                  {formula.raison}
+                </Typography>
+              </Box>
+              
             </CardContent>
           </Card>
         ))}

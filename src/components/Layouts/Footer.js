@@ -64,6 +64,22 @@ export default function Footer() {
                             >
                                 NANA HEAD SPA
                             </Typography>
+                            {/* LOGO */}
+                            <Link href="/" passHref>
+                                <Box
+                                    component="img"
+                                    src="/images/logo-nana-head.png" // <-- ton chemin de logo ici (mets /logo.svg, /logo.png, ou ce que tu veux)
+                                    alt="Nana Head Spa Logo"
+                                    sx={{
+                                        height: 80, // adapte la taille du logo si besoin
+                                        width: 'auto',
+                                        borderRadius: '50%',
+                                        display: { xs: 'none', md: 'block' },
+                                        mr: 4,
+                                        cursor: 'pointer',
+                                    }}
+                                />
+                            </Link>
                             {/*<Typography
                                 variant="body2"
                                 gutterBottom
@@ -127,15 +143,15 @@ export default function Footer() {
                         }}
                     >
                         <Typography variant="body2" sx={{ fontWeight: '600' }}>
-                          Entreprise
+                            Entreprise
                         </Typography>
                         <Link color="text.secondary" variant="body2" href="/presentation">
-                          Présentation
+                            Présentation
                         </Link>
                         <Link color="text.secondary" variant="body2" href="/nouveautes">
-                          Nouveautés / Ofrres
+                            Nouveautés / Ofrres
                         </Link>
-                       
+
                     </Box>
                     <Box
                         sx={{
@@ -170,13 +186,13 @@ export default function Footer() {
                 >
                     <div>
                         <Link color="text.secondary" variant="body2" href="#">
-                           Politique de confidentialité
+                            Politique de confidentialité
                         </Link>
                         <Typography sx={{ display: 'inline', mx: 0.5, opacity: 0.5 }}>
                             &nbsp;•&nbsp;
                         </Typography>
                         <Link color="text.secondary" variant="body2" href="#">
-                          Conditions d&apos;utilisation
+                            Conditions d&apos;utilisation
                         </Link>
                         <Copyright />
                     </div>

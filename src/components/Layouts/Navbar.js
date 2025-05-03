@@ -131,10 +131,17 @@ export default function Navbar({ themeMode, setThemeMode }) {
                             alignItems: 'center',
                         }}
                     >
-                        <IconButton onClick={toggleTheme} color="inherit">
+                        <IconButton 
+                            onClick={toggleTheme} 
+                            
+                            color="inherit"
+                            sx={{
+                                backgroundColor:theme.palette.primary.main
+                            }}
+                        >
                             {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon sx={{ color: "#fff" }} />}
                         </IconButton>
-                        <Button
+                        {/*<Button
                             color="primary"
                             variant="text"
                             size="medium"
@@ -169,8 +176,9 @@ export default function Navbar({ themeMode, setThemeMode }) {
                             }}
                         >
                             Se connecter
-                        </Button>
+                        </Button>*/}
                     </Box>
+                
 
                     {/* MENU MOBILE */}
                     <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
@@ -243,7 +251,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     );
                                 })}
 
-                                <Divider sx={{ my: 3 }} />
+                               {/* <Divider sx={{ my: 3 }} />
 
                                 <MenuItem>
                                     <IconButton onClick={toggleTheme} color="inherit">
@@ -259,7 +267,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     <Button color="primary" variant="outlined" fullWidth>
                                         S'inscrire
                                     </Button>
-                                </MenuItem>
+                                </MenuItem>*/}
                             </Box>
                         </Drawer>
                     </Box>
