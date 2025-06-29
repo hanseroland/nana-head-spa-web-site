@@ -150,16 +150,16 @@ const FormulaCard = ({ formula }) => {
                 height={{ xs: '100%', sm: '200px', md: '200px' }}
               >
                 <ButtonLink
-                  link={`/#/${formula.id}`}
+                  link="/reservations"
                   title="Reserver maintenant"
                 />
               </Box>
             </Box>
 
-            
+
             <Box display="block" justifyContent="space-between" alignItems="center">
-              <Typography variant="h6" 
-               
+              <Typography variant="h6"
+
                 sx={{ color: theme.palette.primary.main, mt: 4, fontWeight: 600, textAlign: 'left' }}
               >
                 Pourquoi on l'adore ?
