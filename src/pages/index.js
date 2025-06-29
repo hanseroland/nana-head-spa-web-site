@@ -4,7 +4,6 @@ import styles from "@/styles/Home.module.css";
 import Hero from "@/components/ui/Hero";
 import SpaIntroSection from "@/components/ui/SpaIntroSection";
 import StarFormulasSection from "../components/ui/StarFormulasSection";
-import HomeBlogSection from "@/components/ui/blog/HomeBlogSection";
 import globalVariables from "@/config/globalVariables";
 import InfiniteSlider from "@/components/ui/InfiniteSlider";
 import TestimonialsSection from "@/components/ui/TestimonialsSection";
@@ -14,7 +13,7 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({ 
+const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
@@ -29,17 +28,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        
+
       >
         <Hero />
         <main className={styles.main}>
-         <SpaIntroSection/>
-         <StarFormulasSection/>
-         <TestimonialsSection />
-         {/*<HomeBlogSection/>*/}
-         <InfiniteSlider/>
+          <SpaIntroSection />
+          <StarFormulasSection />
+          <TestimonialsSection />
+          {/*<HomeBlogSection/>*/}
+          <InfiniteSlider />
         </main>
-       
+
       </div>
     </>
   );

@@ -6,7 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -14,8 +13,11 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Link from 'next/link';
-import { useTheme } from '@mui/material';
-import { useRouter } from 'next/router'; // ✅ import pour détecter la page active
+import { Divider, useTheme, CircularProgress } from '@mui/material'; // Ajout de CircularProgress
+import { useRouter } from 'next/router';
+// ✅ Importez le hook useAuth
+import { useAuth } from '@/context/AuthContext';
+
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -36,8 +38,11 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 export default function Navbar({ themeMode, setThemeMode }) {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
-    const router = useRouter(); // ✅ pour accéder au chemin actif
+    const router = useRouter();
     const currentPath = router.pathname;
+
+    // ✅ Récupérez l'état d'authentification et l'utilisateur depuis le contexte
+    const { isAuthenticated, loading, currentUser, logout } = useAuth();
 
 
     const toggleDrawer = (newOpen) => () => {
@@ -48,11 +53,13 @@ export default function Navbar({ themeMode, setThemeMode }) {
         setThemeMode((prevMode) => (prevMode === 'dark' ? 'light' : 'dark'));
     };
 
+    // Détermine le chemin du compte en fonction du rôle de l'utilisateur
+    const accountPath = currentUser?.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte';
+
     const navLinks = [
-        { label: 'Presentation', href: '/presentation' },
+        { label: 'Présentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
-        { label: 'Reservations', href: '/reservations' },
-       // { label: 'Nouveautés', href: '/nouveautes' },
+        { label: 'Réservations', href: '/reservations' },
         { label: 'Contact', href: '/contact' }
     ];
 
@@ -73,10 +80,10 @@ export default function Navbar({ themeMode, setThemeMode }) {
                     <Link href="/" passHref>
                         <Box
                             component="img"
-                            src="/images/logo-nana-head.png" // <-- ton chemin de logo ici (mets /logo.svg, /logo.png, ou ce que tu veux)
+                            src="/images/logo-nana-head.png"
                             alt="Nana Head Spa Logo"
                             sx={{
-                                height: 80, // adapte la taille du logo si besoin
+                                height: 80,
                                 width: 'auto',
                                 borderRadius: '50%',
                                 display: { xs: 'none', md: 'block' },
@@ -131,54 +138,109 @@ export default function Navbar({ themeMode, setThemeMode }) {
                             alignItems: 'center',
                         }}
                     >
-                        <IconButton 
-                            onClick={toggleTheme} 
-                            
+                        <IconButton
+                            onClick={toggleTheme}
                             color="inherit"
                             sx={{
-                                backgroundColor:theme.palette.primary.main
+                                backgroundColor: theme.palette.primary.main
                             }}
                         >
                             {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon sx={{ color: "#fff" }} />}
                         </IconButton>
-                        {/*<Button
-                            color="primary"
-                            variant="text"
-                            size="medium"
-                            sx={{
-                                fontWeight: 600,
-                                fontFamily: 'Poppins',
-                                textTransform: 'none',
-                                backgroundColor: theme.palette.primary.main,
-                                color: theme.palette.primary.contrastText,
-                                '&:hover': {
-                                    backgroundColor: theme.palette.primary.dark,
-                                    color: 'primary.main'
-                                },
-                            }}
-                        >
-                            S&apos;inscrire
-                        </Button>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            size="medium"
-                            sx={{
-                                fontWeight: 600,
-                                fontFamily: 'Poppins',
-                                textTransform: 'none',
-                                backgroundColor: theme.palette.primary.main,
-                                color: theme.palette.primary.contrastText,
-                                '&:hover': {
-                                    backgroundColor: theme.palette.primary.dark,
-                                    color: 'primary.main'
-                                },
-                            }}
-                        >
-                            Se connecter
-                        </Button>*/}
+
+                        {/* ✅ Conditionnement des boutons en fonction de l'état d'authentification */}
+                        {loading ? (
+                            <CircularProgress size={24} color="primary" />
+                        ) : (
+                            isAuthenticated ? (
+                                <>
+                                    <Link href={accountPath} passHref>
+                                        <Button
+                                            color="primary"
+                                            variant="contained"
+                                            size="medium"
+                                            sx={{
+                                                fontWeight: 600,
+                                                fontFamily: 'Poppins',
+                                                textTransform: 'none',
+                                                backgroundColor: theme.palette.primary.main,
+                                                color: theme.palette.primary.contrastText,
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.dark,
+                                                    color: 'primary.main'
+                                                },
+                                            }}
+                                        >
+                                            Mon Compte
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        onClick={logout} // Utilise la fonction logout du contexte
+                                        color="secondary" // ou une autre couleur appropriée
+                                        variant="outlined"
+                                        size="medium"
+                                        sx={{
+                                            fontWeight: 600,
+                                            fontFamily: 'Poppins',
+                                            textTransform: 'none',
+                                            backgroundColor: theme.palette.primary.main,
+                                            color: theme.palette.primary.contrastText,
+                                            '&:hover': {
+                                                backgroundColor: theme.palette.primary.dark,
+                                                color: 'primary.main'
+                                            },
+                                        }}
+                                    >
+                                        Déconnexion
+                                    </Button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link href="/inscription" passHref>
+                                        <Button
+                                            color="primary"
+                                            variant="text"
+                                            size="medium"
+                                            sx={{
+                                                fontWeight: 600,
+                                                fontFamily: 'Poppins',
+                                                textTransform: 'none',
+                                                backgroundColor: theme.palette.primary.main,
+                                                color: theme.palette.primary.contrastText,
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.dark,
+                                                    color: 'primary.main'
+                                                },
+                                            }}
+                                        >
+                                            S&apos;inscrire
+                                        </Button>
+                                    </Link>
+                                    <Link href="/connexion" passHref>
+                                        <Button
+                                            color="primary"
+                                            variant="contained"
+                                            size="medium"
+                                            sx={{
+                                                fontWeight: 600,
+                                                fontFamily: 'Poppins',
+                                                textTransform: 'none',
+                                                backgroundColor: theme.palette.primary.main,
+                                                color: theme.palette.primary.contrastText,
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.primary.dark,
+                                                    color: 'primary.main'
+                                                },
+                                            }}
+                                        >
+                                            Se connecter
+                                        </Button>
+                                    </Link>
+                                </>
+                            )
+                        )}
                     </Box>
-                
+
 
                     {/* MENU MOBILE */}
                     <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
@@ -208,24 +270,24 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                 </Box>
 
                                 {/* LIENS MOBILE */}
-                                <Link  href="/" passHref>
+                                <Link href="/" passHref>
                                     <MenuItem
                                         sx={{
                                             fontWeight: 600,
                                             fontFamily: 'Poppins',
                                             textTransform: 'none',
-                                            color:'primary.main' ,
+                                            color: 'primary.main',
                                             backgroundColor: 'transparent',
                                             '&:hover': {
                                                 color: 'text.primary',
-                                               
+
                                             },
                                         }}
                                     >
                                         Accueil
                                     </MenuItem>
-                                    </Link>
-                                
+                                </Link>
+
                                 {navLinks.map((link) => {
                                     const isActive = currentPath === link.href;
                                     return (
@@ -251,28 +313,59 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     );
                                 })}
 
-                               {/* <Divider sx={{ my: 3 }} />
+                                <Divider sx={{ my: 3 }} />
 
                                 <MenuItem>
                                     <IconButton onClick={toggleTheme} color="inherit">
                                         {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
                                     </IconButton>
                                 </MenuItem>
-                                <MenuItem>
-                                    <Button color="primary" variant="contained" fullWidth>
-                                        Se connecter
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button color="primary" variant="outlined" fullWidth>
-                                        S'inscrire
-                                    </Button>
-                                </MenuItem>*/}
+
+                                {/* ✅ Conditionnement des boutons dans le menu mobile */}
+                                {loading ? (
+                                    <MenuItem sx={{ justifyContent: 'center' }}>
+                                        <CircularProgress size={24} color="primary" />
+                                    </MenuItem>
+                                ) : (
+                                    isAuthenticated ? (
+                                        <>
+                                            <Link href={accountPath} passHref>
+                                                <MenuItem>
+                                                    <Button color="primary" variant="contained" fullWidth>
+                                                        Mon Compte
+                                                    </Button>
+                                                </MenuItem>
+                                            </Link>
+                                            <MenuItem onClick={logout}> {/* Utilise onClick sur MenuItem pour la déconnexion */}
+                                                <Button color="secondary" variant="outlined" fullWidth>
+                                                    Déconnexion
+                                                </Button>
+                                            </MenuItem>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link href="/inscription" passHref>
+                                                <MenuItem>
+                                                    <Button color="primary" variant="contained" fullWidth>
+                                                        S&apos;inscrire
+                                                    </Button>
+                                                </MenuItem>
+                                            </Link>
+                                            <Link href="/connexion" passHref>
+                                                <MenuItem>
+                                                    <Button color="primary" variant="outlined" fullWidth>
+                                                        Se connecter
+                                                    </Button>
+                                                </MenuItem>
+                                            </Link>
+                                        </>
+                                    )
+                                )}
                             </Box>
                         </Drawer>
                     </Box>
                 </StyledToolbar>
             </Container>
-        </AppBar>
+        </AppBar >
     );
 }

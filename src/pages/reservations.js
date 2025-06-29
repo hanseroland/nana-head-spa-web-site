@@ -1,39 +1,56 @@
+import { useState } from "react";
 import Head from "next/head";
 import ReusableHero from "@/components/ui/ReusableHero";
-import { Box, Button, Container, Typography, useTheme } from "@mui/material";
-import { useContext, useState } from "react";
-import { BookingContext, BookingProvider } from '@/context/BookingContext';
+import { Alert, AlertTitle, Box, Button, CircularProgress, Container, Typography, useTheme } from "@mui/material";
 import BookingCalendar from "@/components/ui/BookingCalendar";
 import BookingModal from "@/components/ui/BookingModal"; // 👈 Importe BookingModal
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from "next/router";
 
 
 
 const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
 
-const ReservationPage = () => {
+const Reservations = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // État pour contrôler l'ouverture de la modale
   const [selectedDate, setSelectedDate] = useState(null); // État pour stocker la date sélectionnée
-  const { bookings } = useContext(BookingContext); // 👈 Utilise useContext pour accéder à bookings
+  //const { bookings } = useContext(BookingContext); // 👈 Utilise useContext pour accéder à bookings
 
+
+  // ✅ Accède à l'état de l'utilisateur via le Context
+  const { currentUser, isAuthenticated, loading } = useAuth(); // Récupère isAuthenticated et loading
+  const router = useRouter();
   const theme = useTheme();
+
 
 
   // Fonction pour ouvrir la modale et stocker la date sélectionnée
   const handleDateClick = (dateStr) => {
-    setSelectedDate(dateStr);
-    setIsModalOpen(true);
+    // ✅ Vérifie si l'utilisateur est authentifié avant d'ouvrir la modale
+    if (isAuthenticated) {
+      setSelectedDate(dateStr);
+      setIsModalOpen(true);
+    } else {
+      // Si l'utilisateur n'est pas authentifié, ne pas ouvrir la modale
+      // et potentiellement afficher un message ou rediriger.
+      // Le message visuel est géré dans le JSX ci-dessous.
+      console.log("Veuillez vous connecter ou vous inscrire pour réserver.");
+      // Optionnel : router.push('/connexion'); pour rediriger automatiquement.
+    }
   };
+
 
   // Fonction pour fermer la modale
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedDate(null);
   };
+
 
   return (
     <>
@@ -73,15 +90,54 @@ const ReservationPage = () => {
             Réservation dès maintenant votre séance
           </MotionTypography>
 
-          <Typography variant="h6" align="center"> Cliauez sur le bouton ci-dessous </Typography>
-           {/*<BookingCalendar onDateClick={handleDateClick} />*/} {/* 👈 Passe la fonction handleDateClick au calendrier */}
+          <Typography variant="h6" align="center"> Cliquez sur le bouton ci-dessous </Typography>
+
+          {/* ✅ Affichage conditionnel du message d'authentification */}
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100px' }}>
+              {/* Optionnel: un petit spinner pendant le chargement de l'état d'auth */}
+              <CircularProgress size={60} />
+              <Typography>Chargement de l'état d'authentification...</Typography>
+            </Box>
+          ) : (
+            !isAuthenticated && (
+              <MotionBox
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                sx={{ mb: 4 }}
+              >
+                <Alert
+                  severity="info"
+                  sx={{
+                    justifyContent: 'center', // Centre le contenu horizontalement
+                    alignItems: 'center',     // Centre le contenu verticalement
+                    py: 2, // Plus de padding vertical
+                    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.info.light,
+                    color: theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
+                    '.MuiAlert-icon': {
+                      color: theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark,
+                    }
+                  }}
+                >
+                  <AlertTitle>Action Requise</AlertTitle>
+                  <Typography variant="body1">
+                    Veuillez vous <Link href="/connexion" passHref style={{ color: theme.palette.primary.main, fontWeight: 'bold', textDecoration: 'none' }}>connecter</Link> ou vous <Link href="/inscription" passHref style={{ color: theme.palette.primary.main, fontWeight: 'bold', textDecoration: 'none' }}>inscrire</Link> pour réserver.
+                  </Typography>
+                </Alert>
+              </MotionBox>
+            )
+          )}
+
+
+          <BookingCalendar onDateClick={handleDateClick} />{/* 👈 Passe la fonction handleDateClick au calendrier */}
 
           {/* 👈 Affiche la modale conditionnellement */}
-          {/* <BookingModal
+          <BookingModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             selectedDate={selectedDate}
-          /> */}
+          />
 
           {/* QR Code pour Instagram */}
           <Box sx={{ mt: 3 }}>
@@ -147,10 +203,12 @@ const ReservationPage = () => {
 };
 
 // 👇 Emballe la page dans le BookingProvider
-const Reservations = () => (
-  <BookingProvider>
-    <ReservationPage />
-  </BookingProvider>
-);
+//const Reservations = () => (
+//<BookingProvider>
+//<ReservationPage />
+//</BookingProvider>
+//);
+
+
 
 export default Reservations;
