@@ -149,7 +149,7 @@ export default function Footer() {
                             Présentation
                         </Link>
                         <Link color="text.secondary" variant="body2" href="/nouveautes">
-                            Nouveautés / Ofrres
+                            Nouveautés / Conseils
                         </Link>
 
                     </Box>
