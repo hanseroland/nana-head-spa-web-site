@@ -160,7 +160,7 @@ export default function Footer() {
                             gap: 1,
                         }}
                     >
-                        <Typography variant="body2" sx={{ fontWeight: '600' }}>
+                        {/* <Typography variant="body2" sx={{ fontWeight: '600' }}>
                             Legalité
                         </Typography>
                         <Link color="text.secondary" variant="body2" href="#">
@@ -168,7 +168,7 @@ export default function Footer() {
                         </Link>
                         <Link color="text.secondary" variant="body2" href="#">
                             Confidentialité
-                        </Link>
+                        </Link>*/}
                         <Link color="text.secondary" variant="body2" href="/contact">
                             Contact
                         </Link>

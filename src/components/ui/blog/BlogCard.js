@@ -1,4 +1,5 @@
 import React from "react";
+import Link from 'next/link';
 import { Card, CardMedia, CardContent, Typography, Box, AvatarGroup, Avatar } from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from '@mui/material/styles';
@@ -42,9 +43,9 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 
 function Author({ authors, date }) {
   const formattedDate = new Date(date).toLocaleDateString('fr-FR', {
-    weekday: 'short', 
-    year: 'numeric', 
-    month: 'long', 
+    weekday: 'short',
+    year: 'numeric',
+    month: 'long',
     day: 'numeric',
   });
 
@@ -91,7 +92,9 @@ Author.propTypes = {
   date: PropTypes.string.isRequired,  // Date format prop
 };
 
-export default function BlogCard({ img, tag, title, description, authors, date }) {
+
+
+export default function BlogCard({ img, tag, title, description, authors, date, slug }) {
   const [focusedCardIndex, setFocusedCardIndex] = React.useState(null);
 
   const handleFocus = (index) => {
@@ -102,37 +105,54 @@ export default function BlogCard({ img, tag, title, description, authors, date }
     setFocusedCardIndex(null);
   };
 
+  // Fonction utilitaire pour extraire un extrait de texte
+  const getExcerpt = (htmlContent, maxLength = 160) => {
+    if (!htmlContent) return '';
+    // ✅ Cette ligne supprime toutes les balises HTML
+    const textContent = htmlContent.replace(/<[^>]*>/g, '');
+    if (textContent.length > maxLength) {
+      return textContent.substring(0, maxLength) + '...';
+    }
+    return textContent;
+  };
+
   return (
-    <SyledCard
-      variant="outlined"
-      onFocus={() => handleFocus(0)}
-      onBlur={handleBlur}
-      tabIndex={0}
-      className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
-    >
-      <CardMedia
-        component="img"
-        alt={title}
-        image={img}
-        sx={{
-          aspectRatio: "16 / 9",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-        }}
-      />
-      <SyledCardContent>
-        <StyledTypography variant="caption" fontWeight={600} gutterBottom>
-          {tag}
-        </StyledTypography>
-        <StyledTypography variant="h6" gutterBottom>
-          {title}
-        </StyledTypography>
-        <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-          {description}
-        </StyledTypography>
-      </SyledCardContent>
-      <Author authors={authors} date={date} />
-    </SyledCard>
+    <Link href={`/nouveautes/${slug}`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+      <SyledCard
+        variant="outlined"
+        onFocus={() => handleFocus(0)}
+        onBlur={handleBlur}
+        tabIndex={0}
+        className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
+      >
+        <CardMedia
+          component="img"
+          alt={title}
+          image={img}
+          sx={{
+            aspectRatio: "16 / 9",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+          }}
+        />
+        <SyledCardContent>
+          <StyledTypography variant="caption" fontWeight={600} gutterBottom>
+            {tag}
+          </StyledTypography>
+          <StyledTypography variant="h6" gutterBottom>
+            {title}
+          </StyledTypography>
+          <StyledTypography
+            variant="body2"
+            color="text.secondary"
+            gutterBottom
+          >
+            {getExcerpt(description)}
+          </StyledTypography>
+        </SyledCardContent>
+        <Author authors={authors} date={date} />
+      </SyledCard>
+    </Link>
   );
 }
 
@@ -148,4 +168,5 @@ BlogCard.propTypes = {
     })
   ).isRequired,
   date: PropTypes.string.isRequired,  // Date prop type
+  slug: PropTypes.string.isRequired, // C'est déjà bien ici !
 };

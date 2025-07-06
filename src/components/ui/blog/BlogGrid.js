@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import BlogCard from './BlogCard';
 
 
-function BlogGrid({posts}) {
+function BlogGrid({ posts }) {
   return (
     <Grid container spacing={2} columns={12} mt={4}>
       {posts.map((post, index) => (

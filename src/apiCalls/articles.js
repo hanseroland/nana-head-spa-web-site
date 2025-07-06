@@ -45,11 +45,19 @@ export const GetAllArticles = async (filters = {}) => {
  */
 export const GetArticleBySlug = async (slug) => {
     try {
-        const response = await axiosInstance('get', `/articles/${slug}`);
+        const url = `/articles/${slug}`;
+        const response = await axiosInstance('get', url);
+        // Assurez-vous que votre API renvoie bien { success: true, data: {...} }
         return response;
     } catch (error) {
-        console.error(`Erreur lors de la récupération de l'article ${slug} :`, error);
-        return { success: false, message: error.message || "Impossible de récupérer l'article." };
+        console.error(`Erreur lors de la récupération de l'article par slug (${slug}) :`, error);
+        if (error.response && error.response.status === 404) {
+            return { success: false, message: "Article introuvable." };
+        }
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message || `Impossible de récupérer l'article avec le slug ${slug}.` };
+        }
+        return { success: false, message: error.message || "Une erreur réseau est survenue." };
     }
 };
 

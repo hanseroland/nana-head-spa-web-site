@@ -17,6 +17,8 @@ import { Divider, useTheme, CircularProgress } from '@mui/material'; // Ajout de
 import { useRouter } from 'next/router';
 // ✅ Importez le hook useAuth
 import { useAuth } from '@/context/AuthContext';
+import { GetAllArticles } from '@/apiCalls/articles'; // Adjust path if necessary
+
 
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -36,13 +38,52 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 export default function Navbar({ themeMode, setThemeMode }) {
+
     const [open, setOpen] = React.useState(false);
+    const [hasNewsOrTips, setHasNewsOrTips] = React.useState(false);
     const theme = useTheme();
     const router = useRouter();
     const currentPath = router.pathname;
 
-    // ✅ Récupérez l'état d'authentification et l'utilisateur depuis le contexte
+    //l'état d'authentification et l'utilisateur depuis le contexte
     const { isAuthenticated, loading, currentUser, logout } = useAuth();
+
+
+
+    // ✅ Récupérer les articles pour vérifier les "nouveautés" ou "conseils" publiés
+    React.useEffect(() => {
+        const fetchPublishedArticles = async () => {
+            try {
+                // Nous allons faire deux appels pour chaque catégorie
+                // Ou mieux: un seul appel avec des ORs si votre backend le supporte.
+                // Pour l'instant, faisons deux appels pour plus de clarté.
+                const filters = { isPublished: true };
+
+                // Vérifier les nouveautés
+                const newsResponse = await GetAllArticles({ ...filters, category: 'nouveauté' });
+                if (newsResponse.success && newsResponse.data && newsResponse.data.length > 0) {
+                    setHasNewsOrTips(true);
+                    return; // Si des nouveautés sont trouvées, on arrête ici
+                }
+
+                // Si pas de nouveautés, vérifier les conseils
+                const tipsResponse = await GetAllArticles({ ...filters, category: 'conseil' });
+                if (tipsResponse.success && tipsResponse.data && tipsResponse.data.length > 0) {
+                    setHasNewsOrTips(true);
+                    return; // Si des conseils sont trouvés, on arrête ici
+                }
+
+                // Si ni nouveauté ni conseil publié
+                setHasNewsOrTips(false);
+
+            } catch (error) {
+                console.error("Erreur lors de la récupération des articles publiés:", error);
+                setHasNewsOrTips(false); // Assumer qu'il n'y a pas d'articles si erreur
+            }
+        };
+
+        fetchPublishedArticles();
+    }, []); // Dépendances vides pour n'exécuter qu'une fois au montage
 
 
     const toggleDrawer = (newOpen) => () => {
@@ -56,10 +97,13 @@ export default function Navbar({ themeMode, setThemeMode }) {
     // Détermine le chemin du compte en fonction du rôle de l'utilisateur
     const accountPath = currentUser?.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte';
 
+    // ✅ Création dynamique des liens de navigation
     const navLinks = [
         { label: 'Présentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
         { label: 'Réservations', href: '/reservations' },
+        // N'inclure "Nouveautés" que si hasNewsOrTips est vrai
+        ...(hasNewsOrTips ? [{ label: 'Nouveautés & Conseils', href: '/nouveautes' }] : []), // Ajustez l'URL de votre page "Nouveautés & Conseils"
         { label: 'Contact', href: '/contact' }
     ];
 

@@ -1,121 +1,139 @@
+// pages/nouveautes/index.js
+
 import Head from "next/head";
-import { Box, Container, Pagination } from "@mui/material";
+import { Box, Container, Pagination, CircularProgress, Typography } from "@mui/material";
 import BlogHeader from "@/components/ui/blog/BlogHeader";
 import SearchBar from "@/components/ui/blog/SearchBar";
 import CategoryChips from "@/components/ui/blog/CategoryChips";
 import BlogGrid from "@/components/ui/blog/BlogGrid";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { GetAllArticles } from "@/apiCalls/articles";
 
 const POSTS_PER_PAGE = 4;
 
+export default function Blog({ initialArticles = [], totalArticlesCount = 0, error }) {
+    const categories = ["Toutes les catégories", "nouveauté", "conseil"];
 
-const cardData = [
-    {
-        img: 'https://images.unsplash.com/photo-1506003094589-53954a26283f?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Astuces',
-        title: '5 astuces bien-être à adopter après une séance de head spa',
-        description:
-            "Optimisez les bienfaits de votre séance grâce à ces rituels simples à faire chez vous. Respiration, hydratation, huiles... on vous dit tout !",
-        authors: [
-            { name: 'Camille Lemoine', avatar: '/images/avatar/person_110935.png' },
-            { name: 'Sophie Delmas', avatar: '/images/avatar/person_110935.png' },
-        ],
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Beauté',
-        title: 'Les secrets d’un cuir chevelu sain pour des cheveux sublimes',
-        description:
-            "Un cuir chevelu équilibré, c’est la base d’une chevelure éclatante. Découvrez nos conseils pour prendre soin de votre racine à la pointe.",
-        authors: [{ name: 'Léna Morel', avatar: '/images/avatar/person_110935.png' }],
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Visage',
-        title: 'Le massage facial japonais : une technique miracle contre les tensions',
-        description:
-            "Inspiré du kobido, ce massage stimule la circulation et l’éclat de votre peau. Une expérience sensorielle unique à découvrir absolument.",
-        authors: [{ name: 'Émilie Renard', avatar: '/images/avatar/person_110935.png' }],
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1498843053639-170ff2122f35?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Main',
-        title: 'Routine cocooning : prendre soin de ses mains en hiver',
-        description:
-            "Entre gommages doux, huiles nourrissantes et bains de paraffine, vos mains aussi méritent un moment de douceur et d’attention.",
-        authors: [{ name: 'Juliette Blanc', avatar: '/images/avatar/person_110935.png' }],
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1581182800629-7d90925ad072?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Beauté',
-        title: 'Nos rituels capillaires éco-responsables préférés',
-        description:
-            "Envie de prendre soin de vos cheveux tout en respectant la planète ? On vous partage nos soins naturels et gestes green à adopter dès maintenant.",
-        authors: [
-            { name: 'Claire Dubois', avatar: '/images/avatar/person_110935.png' },
-            { name: 'Marine Giraud', avatar: '/images/avatar/person_110935.png' },
-        ],
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1522108098940-de49801b5b40?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Astuces',
-        title: 'Comment prolonger les bienfaits d’un soin head spa à la maison ?',
-        description:
-            "Adoptez une routine douce et efficace pour entretenir les effets apaisants du head spa chez vous, jour après jour.",
-        authors: [{ name: 'Nina Lefèvre', avatar: '/images/avatar/person_110935.png' }],
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        tag: 'Actualité',
-        title: 'Mise en ligne de notre site web : une nouvelle ère de beauté commence ✨',
-        description:
-            "Nous sommes ravies de vous accueillir dans notre univers doux et sensoriel. Découvrez nos soins, notre communauté et nos conseils bien-être dès aujourd’hui !",
-        authors: [{ name: 'Équipe HeadSpa Harmony', avatar: '/images/avatar/person_110935.png' }],
-    },
-];
-
-
-
-export default function Blog() {
-
-    const categories = ["Toutes les catégories", "Astuces", "Beauté", "Visage", "Main"];
-
+    const [articles, setArticles] = useState(initialArticles);
+    const [totalCount, setTotalCount] = useState(totalArticlesCount);
     const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories");
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+
+    // ✅ Fonction utilitaire pour formater un article reçu de l'API
+    const formatArticleForCard = (article) => {
+        // Assurez-vous que l'auteur est peuplé et a les propriétés nécessaires
+        const authorData = article.author
+            ? [{
+                name: `${article.author.firstName || ''} ${article.author.lastName || ''}`.trim() || 'Auteur Inconnu',
+                avatar: article.author.avatar || '/images/avatar/default_avatar.png',
+            }]
+            : [{ name: 'Auteur Inconnu', avatar: '/images/avatar/default_avatar.png' }]; // Toujours un tableau, même si vide ou inconnu
+
+        return {
+            img: article.image || 'https://via.placeholder.com/600x400?text=Article+Image', // Image par défaut si manquante
+            tag: article.category || 'Non classifié',
+            title: article.title || 'Titre manquant',
+            description: article.content ? (article.content.substring(0, 150) + (article.content.length > 150 ? '...' : '')) : 'Contenu manquant.',
+            authors: authorData,
+            date: article.publishedAt || new Date().toISOString(), // Date actuelle si manquante
+            slug: article.slug,
+        };
+    };
+
+    const fetchArticles = async (category, term, currentPage) => {
+        setLoading(true);
+        try {
+            const filters = {
+                isPublished: true,
+                limit: POSTS_PER_PAGE,
+                skip: (currentPage - 1) * POSTS_PER_PAGE
+            };
+
+            if (category !== "Toutes les catégories") {
+                filters.category = category;
+            }
+            if (term) {
+                filters.searchTerm = term;
+            }
+
+            const response = await GetAllArticles(filters);
+            if (response.success) {
+                // ✅ Formater les articles ici avant de les stocker dans l'état
+                const formattedArticles = response.data.map(formatArticleForCard);
+                setArticles(formattedArticles);
+                setTotalCount(response.totalCount);
+            } else {
+                console.error("Erreur lors de la récupération des articles:", response.message);
+                setArticles([]);
+                setTotalCount(0);
+            }
+        } catch (err) {
+            console.error("Erreur inattendue lors du fetch des articles:", err);
+            setArticles([]);
+            setTotalCount(0);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // La condition pour éviter un double fetch au premier chargement est plus complexe
+        // avec la pagination et la recherche. Une approche plus simple est de toujours fetch
+        // si les paramètres changent, et laisser getServerSideProps s'occuper du premier rendu.
+        // Si les `initialArticles` suffisent pour le premier rendu et qu'aucun filtre n'est appliqué,
+        // vous pouvez ajouter une condition pour ne pas appeler `fetchArticles` immédiatement après `getServerSideProps`.
+
+        // Option 1: Toujours appeler fetchArticles si les dépendances changent (plus simple à gérer)
+        fetchArticles(selectedCategory, searchTerm, page);
+
+        // Option 2 (plus complexe mais peut éviter un appel API redondant au premier chargement):
+        // if (!(page === 1 && selectedCategory === "Toutes les catégories" && searchTerm === "" && initialArticles.length > 0)) {
+        //     fetchArticles(selectedCategory, searchTerm, page);
+        // }
+    }, [selectedCategory, searchTerm, page]);
+
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
-        setPage(1); // Reset to first page
+        setPage(1);
     };
 
     const handleSearch = (term) => {
         setSearchTerm(term);
-        setPage(1); // Reset to first page
+        setPage(1);
     };
 
+    const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
-    // 🎯 FILTRAGE + RECHERCHE
-    const filteredPosts = useMemo(() => {
-        return cardData.filter((post) => {
-            const matchCategory = selectedCategory === "Toutes les catégories" || post.tag === selectedCategory;
-            const matchTitle = post.title.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchCategory && matchTitle;
-        });
-    }, [selectedCategory, searchTerm]);
-
-    // 🎯 PAGINATION
-    const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-    const paginatedPosts = useMemo(() => {
-        const startIndex = (page - 1) * POSTS_PER_PAGE;
-        return filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
-    }, [filteredPosts, page]);
+    if (error) {
+        return (
+            <Box
+                component="section"
+                sx={{
+                    width: "100%",
+                    minHeight: "100vh",
+                    backgroundColor: (theme) => theme.palette.background.default,
+                    color: (theme) => theme.palette.text.primary,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    py: 6,
+                }}
+            >
+                <Typography variant="h5" color="error">
+                    Erreur lors du chargement des articles : {error}
+                </Typography>
+            </Box>
+        );
+    }
 
     return (
         <>
             <Head>
                 <title>Nouveautés | NANA HEAD SPA</title>
-                <meta name="description" content="Découvrez mes nouveautés / offres du moment" />
+                <meta name="description" content="Découvrez mes nouveautés / conseils du moment" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <Box
@@ -151,7 +169,20 @@ export default function Blog() {
                         <SearchBar onSearch={handleSearch} />
 
                     </Box>
-                    <BlogGrid posts={paginatedPosts} />
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        articles.length > 0 ? (
+                            <BlogGrid posts={articles} />
+                        ) : (
+                            <Typography variant="h6" color="text.secondary" sx={{ mt: 4, textAlign: 'center' }}>
+                                Aucun article trouvé pour votre recherche.
+                            </Typography>
+                        )
+                    )}
+
 
                     {totalPages > 1 && (
                         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -168,4 +199,62 @@ export default function Blog() {
             </Box>
         </>
     );
+}
+
+export async function getServerSideProps() {
+    try {
+        const response = await GetAllArticles({
+            isPublished: true,
+            limit: POSTS_PER_PAGE,
+            skip: 0
+        });
+
+        if (response.success) {
+            // ✅ Formater les articles ici aussi pour le rendu initial
+            const formattedArticles = response.data.map(article => {
+                const authorData = article.author
+                    ? [{
+                        name: `${article.author.firstName || ''} ${article.author.lastName || ''}`.trim() || 'Auteur Inconnu',
+                        avatar: article.author.avatar || '/images/avatar/default_avatar.png',
+                    }]
+                    : [{ name: 'Auteur Inconnu', avatar: '/images/avatar/default_avatar.png' }];
+
+                return {
+                    img: article.image || 'https://via.placeholder.com/600x400?text=Article+Image',
+                    tag: article.category || 'Non classifié',
+                    title: article.title || 'Titre manquant',
+                    description: article.content ? (article.content.substring(0, 150) + (article.content.length > 150 ? '...' : '')) : 'Contenu manquant.',
+                    authors: authorData,
+                    date: article.publishedAt || new Date().toISOString(),
+                    slug: article.slug,
+                };
+            });
+
+            return {
+                props: {
+                    initialArticles: formattedArticles, // Passez les articles formatés
+                    totalArticlesCount: response.totalCount || response.data.length,
+                    error: null
+                },
+            };
+        } else {
+            console.error("Erreur getServerSideProps:", response.message);
+            return {
+                props: {
+                    initialArticles: [],
+                    totalArticlesCount: 0,
+                    error: response.message || "Échec du chargement initial des articles."
+                },
+            };
+        };
+    } catch (error) {
+        console.error("Erreur serveur lors de getServerSideProps:", error);
+        return {
+            props: {
+                initialArticles: [],
+                totalArticlesCount: 0,
+                error: "Impossible de se connecter au serveur pour récupérer les articles."
+            },
+        };
+    }
 }

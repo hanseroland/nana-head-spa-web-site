@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import AdminSidebar from './AdminSidebar';
 import AdminAppBar from './AdminAppBar';
-import { AccountCircle, Assignment, AutoFixHigh, CalendarMonth, Dashboard, EmojiEvents, LibraryBooks } from '@mui/icons-material';
+import { AccountCircle, Assignment, AutoFixHigh, CalendarMonth, Chat, Dashboard, EmojiEvents, LibraryBooks } from '@mui/icons-material';
 //import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { CircularProgress, Typography, Alert, AlertTitle } from '@mui/material';
@@ -37,6 +37,7 @@ const AdminLayout = ({ children, themeMode, setThemeMode }) => {
         { text: 'Rendez-vous', path: '/admin/rendezvous', icon: <CalendarMonth /> },
         { text: 'Formules', path: '/admin/formules', icon: <LibraryBooks /> },
         { text: 'Utilisateurs', path: '/admin/users', icon: <ContactPageIcon /> },
+        { text: 'Chat', path: '/admin/chat', icon: <Chat /> },
     ];
 
     const clientLinks = [
@@ -44,6 +45,8 @@ const AdminLayout = ({ children, themeMode, setThemeMode }) => {
         { text: 'Historique des soins', path: '/admin/mes-soins', icon: <Assignment /> },
         { text: 'Mes rendez-vous', path: '/admin/mesrendezvous', icon: <CalendarMonth /> },
         { text: 'Historique de Fidélité', path: '/admin/fidelite', icon: <EmojiEvents /> },
+        { text: 'Chat', path: '/admin/chat', icon: <Chat /> },
+
     ];
 
     //État pour gérer l'ouverture/fermeture de la barre latérale (drawer)

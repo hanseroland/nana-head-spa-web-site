@@ -9,6 +9,8 @@ import AuthLayout from "@/components/Layouts/AuthLayout";
 //import { Provider } from "react-redux";
 //import store from "@/redux/store";
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { ChatProvider } from '@/context/ChatContext';
+import { Toaster } from 'react-hot-toast';
 
 
 export default function App({ Component, pageProps }) {
@@ -36,14 +38,17 @@ export default function App({ Component, pageProps }) {
   return (
     <AuthProvider>
       {/*<Provider store={store} >*/}
-      <ThemeProvider theme={getAppTheme(themeMode)}>
-        {/* CssBaseline applique les styles globaux de Material-UI */}
-        <CssBaseline enableColorScheme />
-        <LayoutComponent themeMode={themeMode} setThemeMode={setThemeMode}>
-          <Component {...pageProps} />
-        </LayoutComponent>
-      </ThemeProvider>
-      {/*</Provider>*/}
+      <ChatProvider  >
+        <ThemeProvider theme={getAppTheme(themeMode)}>
+          {/* CssBaseline applique les styles globaux de Material-UI */}
+          <CssBaseline enableColorScheme />
+          <Toaster position="top-right" />
+          <LayoutComponent themeMode={themeMode} setThemeMode={setThemeMode}>
+            <Component {...pageProps} />
+          </LayoutComponent>
+        </ThemeProvider>
+        {/*</Provider>*/}
+      </ChatProvider>
     </AuthProvider>
 
   )
