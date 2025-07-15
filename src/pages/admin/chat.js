@@ -1,6 +1,6 @@
 // src/pages/chat/index.js
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Container, Grid } from '@mui/material';
+import { Box, Typography, Container, Grid } from '@mui/material';
 import { useAuth } from '@/context/AuthContext';
 import { useChat } from '@/context/ChatContext';
 import ChatWindow from '@/components/admin/ChatWindow';

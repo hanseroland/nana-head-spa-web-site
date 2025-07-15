@@ -56,11 +56,11 @@ function ArticleCard({ article, onEditClick, onDeleteClick }) {
             }}
         >
             {/* Image de l'article */}
-            {article.image && (
+            {article.image?.url && (
                 <CardMedia
                     component="img"
                     height="180" // Hauteur fixe pour l'image
-                    image={article.image}
+                    image={article.image?.url}
                     alt={article.title}
                     sx={{ objectFit: 'cover' }}
                 />

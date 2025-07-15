@@ -1,14 +1,64 @@
-import React from "react";
-import { Box, Button, Container, Typography } from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import { Box, Button, Container, Typography, CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
-import { useTheme } from "@mui/material/styles"; 
-import Bubble from "./Bubble";
+import { useTheme } from "@mui/material/styles";
+import Bubble from "./Bubble"; // Assurez-vous que ce chemin est correct
 import globalVariables from "@/config/globalVariables";
 import { useRouter } from "next/router";
+import { GetAllPageBanners } from '@/apiCalls/banners'; // Importez votre appel API pour les bannières
 
 export default function Hero() {
   const theme = useTheme();
   const router = useRouter();
+
+  const [bannerVideoUrl, setBannerVideoUrl] = useState(null); // URL de la vidéo de la BDD
+  const [loadingBanner, setLoadingBanner] = useState(true);
+  const [errorBanner, setErrorBanner] = useState(null);
+
+  // Vidéo statique par défaut
+  const staticVideoSrc = "/videos/spa-head.mp4";
+
+  // Charger les bannières de la page d'accueil
+  const fetchHomeBanner = useCallback(async () => {
+    setLoadingBanner(true);
+    setErrorBanner(null);
+    try {
+      const response = await GetAllPageBanners();
+      if (response.success && response.data) {
+        // Trouvez la bannière pour la page 'home' qui est de type 'video'
+        const homeVideoBanner = response.data.find(
+          (banner) => banner.pageName === 'accueil' && banner.type === 'video' && banner.media?.url
+        );
+
+        if (homeVideoBanner) {
+          setBannerVideoUrl(homeVideoBanner.media.url);
+        } else {
+          // Si aucune bannière vidéo pour la page 'home' n'est trouvée, on reste sur le null,
+          // ce qui fera afficher la vidéo statique.
+          setBannerVideoUrl(null);
+        }
+      } else {
+        // En cas d'échec de l'API, affiche un message d'erreur et utilise la vidéo statique
+        setErrorBanner(response.message || "Erreur lors du chargement des bannières.");
+        setBannerVideoUrl(null);
+      }
+    } catch (err) {
+      console.error("Erreur API lors du chargement des bannières:", err);
+      setErrorBanner("Impossible de se connecter au serveur pour récupérer les bannières.");
+      setBannerVideoUrl(null);
+    } finally {
+      setLoadingBanner(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHomeBanner();
+  }, [fetchHomeBanner]);
+
+  // Déterminez la vidéo à afficher
+  // Si loadingBanner est vrai, on ne sait pas encore si on a une vidéo, donc on n'affiche rien (ou un placeholder).
+  // Une fois le chargement terminé, si bannerVideoUrl est défini, on l'utilise, sinon la statique.
+  const videoToDisplay = loadingBanner ? null : (bannerVideoUrl || staticVideoSrc);
 
   const bubbleVariants = {
     animate: {
@@ -178,7 +228,7 @@ export default function Hero() {
           </Box>
         </Box>
 
-        {/* Partie droite */}
+        {/* Partie droite (vidéo) */}
         <Box
           component={motion.div}
           initial={{ x: 50, opacity: 0 }}
@@ -206,21 +256,37 @@ export default function Hero() {
               mx: "auto",
             }}
           >
-            <video
-              src="/videos/spa-head.mp4"
-              autoPlay
-              loop
-              muted
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                transform: "scale(1.1) rotate(-10deg)", // Zoom + inclinaison vers la gauche
-                transformOrigin: "center",
-              }}
-            />
-
-             
+            {loadingBanner ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                <CircularProgress color="secondary" />
+              </Box>
+            ) : videoToDisplay ? (
+              <video
+                key={videoToDisplay} // Ajoute une clé pour forcer le re-rendu si l'URL change
+                src={videoToDisplay}
+                autoPlay
+                loop
+                muted
+                playsInline // Important pour la lecture automatique sur mobile
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  transform: "scale(1.1) rotate(-10deg)", // Zoom + inclinaison vers la gauche
+                  transformOrigin: "center",
+                }}
+                onError={(e) => {
+                  console.error("Erreur de chargement de la vidéo :", videoToDisplay, e);
+                  // Optionnel : Bascule vers la vidéo statique en cas d'échec de la dynamique
+                  setBannerVideoUrl(staticVideoSrc);
+                  setErrorBanner("Impossible de charger la vidéo de la bannière. Affichage de la vidéo par défaut.");
+                }}
+              />
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', backgroundColor: theme.palette.grey[300] }}>
+                <Typography variant="caption" color="text.secondary">Vidéo non disponible</Typography>
+              </Box>
+            )}
           </Box>
         </Box>
       </Container>

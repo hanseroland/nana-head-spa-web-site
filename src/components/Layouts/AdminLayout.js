@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import AdminSidebar from './AdminSidebar';
 import AdminAppBar from './AdminAppBar';
-import { AccountCircle, Assignment, AutoFixHigh, CalendarMonth, Chat, Dashboard, EmojiEvents, LibraryBooks } from '@mui/icons-material';
+import { AccountCircle, Assignment, AutoFixHigh, CalendarMonth, Chat, Dashboard, EmojiEvents, LibraryBooks, PhotoCamera, PhotoLibrary } from '@mui/icons-material';
 //import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { CircularProgress, Typography, Alert, AlertTitle } from '@mui/material';
@@ -38,6 +38,9 @@ const AdminLayout = ({ children, themeMode, setThemeMode }) => {
         { text: 'Formules', path: '/admin/formules', icon: <LibraryBooks /> },
         { text: 'Utilisateurs', path: '/admin/users', icon: <ContactPageIcon /> },
         { text: 'Chat', path: '/admin/chat', icon: <Chat /> },
+        { text: 'Galerie', path: '/admin/galerie', icon: <PhotoLibrary /> },
+        { text: 'Bannières', path: '/admin/banner', icon: <PhotoCamera /> },
+
     ];
 
     const clientLinks = [

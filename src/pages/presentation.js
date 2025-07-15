@@ -21,12 +21,12 @@ export default function Presentation() {
                 <meta name="description" content="Découvrez nos spa head pour le bien-être et la relaxation." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-          
+
             <ReusableHero
                 image="/images/archenana-head-spa.jpeg"
                 title="Présentation de NANA HEAD SPA"
                 subtitle="Découvrez ma univers de bien-être et de détente, où chaque détail est pensé pour vous offrir une expérience inoubliable."
-
+                pageName="presentation"
             />
 
             <Container maxWidth="lg">

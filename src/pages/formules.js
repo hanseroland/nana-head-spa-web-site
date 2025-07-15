@@ -11,7 +11,7 @@ import HeadSpaFormulas from "@/components/ui/HeadSpaFormulas";
 
 export default function Formules() {
 
-    
+
 
     return (
         <>
@@ -20,19 +20,20 @@ export default function Formules() {
                 <meta name="description" content="Découvrez mon spa head pour le bien-être et la relaxation." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-           
+
             <ReusableHero
                 image="/images/pexels-craytive-1502219.jpg"
                 title="Mes Formules : Découvrez mes rituels de soin capillaire"
                 subtitle="Chaque formule est conçue pour allier relaxation, soin du cuir chevelu et beauté naturelle des cheveux."
+                pageName="formules"
             />
             <Container maxWidth="lg">
-                <HeadSpaFormulas/>
-                <TestimonialsSection/>
+                <HeadSpaFormulas />
+                <TestimonialsSection />
             </Container>
-            
-            
-           
+
+
+
         </>
     );
 }

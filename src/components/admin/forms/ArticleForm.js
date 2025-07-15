@@ -31,14 +31,18 @@ function ArticleForm({ articleSlug = null, onClose }) {
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState('nouveauté');
     const [content, setContent] = useState(''); // Contenu de l'éditeur WYSIWYG
-    const [imageFile, setImageFile] = useState(null); // Le fichier image sélectionné
-    const [imagePreview, setImagePreview] = useState(null); // URL d'aperçu pour l'image
+    const [imageFile, setImageFile] = useState(null); // Le fichier image sélectionné (pour un nouvel upload)
+    const [imagePreview, setImagePreview] = useState(null); // URL de l'image à afficher (locale ou Cloudinary)
+
+    // ✅ Nouveaux états pour la gestion de l'image existante de Cloudinary
+    const [currentCloudinaryImageUrl, setCurrentCloudinaryImageUrl] = useState(null); // L'URL de l'image existante de l'article
+    const [shouldClearImage, setShouldClearImage] = useState(false); // Flag pour indiquer au backend de supprimer l'image existante
+
     const [isPublished, setIsPublished] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const [formError, setFormError] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false); // Pour savoir si on est en mode édition
-    const [initialImage, setInitialImage] = useState(null); // Pour stocker l'image existante en mode édition
 
     // Charge les données de l'article si un slug est fourni (mode modification)
     const fetchArticleData = useCallback(async () => {
@@ -54,9 +58,16 @@ function ArticleForm({ articleSlug = null, onClose }) {
                     setCategory(article.category);
                     setContent(article.content);
                     setIsPublished(article.isPublished);
-                    if (article.image) {
-                        setImagePreview(article.image); // Affiche l'image existante
-                        setInitialImage(article.image); // Stocke l'URL de l'image initiale
+
+                    // ✅ Si l'article a une image Cloudinary existante
+                    if (article.image && article.image.url) {
+                        setImagePreview(article.image.url); // Affiche l'image existante de Cloudinary
+                        setCurrentCloudinaryImageUrl(article.image.url); // Stocke l'URL initiale
+                        setShouldClearImage(false); // S'assure que le flag de suppression est à false
+                    } else {
+                        setImagePreview(null);
+                        setCurrentCloudinaryImageUrl(null);
+                        setShouldClearImage(false);
                     }
                 } else {
                     setFormError(response.message || "Erreur lors du chargement de l'article.");
@@ -74,27 +85,38 @@ function ArticleForm({ articleSlug = null, onClose }) {
         fetchArticleData();
     }, [fetchArticleData]);
 
-    // Gère le changement de l'image (pour l'aperçu)
+    // Gère le changement de l'image (pour l'aperçu et le fichier à envoyer)
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImageFile(file);
-            setImagePreview(URL.createObjectURL(file)); // Crée un aperçu de l'image
+            setImageFile(file); // Définit le fichier à envoyer
+            setImagePreview(URL.createObjectURL(file)); // Crée un aperçu temporaire pour l'affichage
+            setShouldClearImage(false); // Si une nouvelle image est sélectionnée, on ne veut pas la supprimer
         } else {
+            // Si l'utilisateur annule la sélection de fichier, on revient à l'état précédent
             setImageFile(null);
-            setImagePreview(initialImage); // Revient à l'image initiale si l'utilisateur annule la sélection
+            if (currentCloudinaryImageUrl) {
+                // Si une image Cloudinary existait, on revient à son aperçu
+                setImagePreview(currentCloudinaryImageUrl);
+                setShouldClearImage(false);
+            } else {
+                // Sinon, il n'y a plus d'image du tout
+                setImagePreview(null);
+                setShouldClearImage(true); // Si aucune image Cloudinary n'existait et rien n'est sélectionné,
+                // cela pourrait être un cas où l'utilisateur voulait la supprimer (si elle était là)
+                // mais cela est principalement géré par handleRemoveImage.
+            }
         }
     };
 
-    // Supprime l'aperçu de l'image et le fichier sélectionné
+    // Supprime l'aperçu de l'image et indique que l'image existante doit être supprimée
     const handleRemoveImage = () => {
-        setImageFile(null);
-        setImagePreview(null);
-        // Si en mode édition, réinitialise à l'image initiale ou à null si aucune initiale
-        if (isEditMode) {
-            setInitialImage(null); // Si on retire l'image en mode édition, on suppose qu'on veut la supprimer du backend
-        }
+        setImageFile(null); // Efface le fichier temporaire sélectionné
+        setImagePreview(null); // Efface l'aperçu visuel
+        setCurrentCloudinaryImageUrl(null); // Indique qu'il n'y a plus d'image Cloudinary existante à conserver
+        setShouldClearImage(true); // ✅ Définit le flag pour indiquer au backend de supprimer l'image
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -107,36 +129,25 @@ function ArticleForm({ articleSlug = null, onClose }) {
         formData.append('content', content);
         formData.append('isPublished', isPublished);
 
-        // Seulement ajouter l'image si un nouveau fichier a été sélectionné
+        // ✅ Logique de gestion de l'image pour FormData
         if (imageFile) {
+            // Un nouveau fichier a été sélectionné, on l'ajoute à FormData
             formData.append('image', imageFile);
-        } else if (isEditMode && initialImage === null) {
-            // Si en mode édition et que l'utilisateur a retiré l'image (initialImage est devenu null)
-            // On peut envoyer un indicateur pour que le backend supprime l'image existante
-            // Ou simplement ne rien envoyer, et le backend ne modifiera pas l'image si elle n'est pas dans FormData
-            // Pour être explicite, on pourrait ajouter un champ comme 'removeImage: true'
-            // Ici, nous ne l'envoyons pas si imageFile est null, cela dépend de la logique backend.
-            // Notre backend actuel s'attend à 'image' ou rien. Ne rien envoyer signifie pas de mise à jour de l'image.
+        } else if (isEditMode && shouldClearImage) {
+            // En mode édition, SI aucun nouveau fichier n'a été sélectionné (imageFile est null)
+            // ET QUE le flag shouldClearImage est vrai (l'utilisateur a cliqué sur la croix)
+            formData.append('clearImage', 'true'); // Envoyer ce flag au backend
         }
-
+        // else: Si ni imageFile ni shouldClearImage, le backend ne verra pas de changement pour 'image',
+        // et l'image existante sera conservée (si elle n'a pas été explicitement supprimée).
 
         let response;
         try {
             if (isEditMode) {
-                // Pour la modification, on peut envoyer soit FormData (si imageFile est présent), soit un objet simple
-                // Si imageFile n'est pas présent, on envoie un objet simple pour ne pas toucher à l'image existante
-                // à moins que initialImage soit null (signifiant que l'utilisateur l'a retirée)
-                let dataToSend = formData;
-                if (!imageFile && initialImage !== null) { // Si pas de nouveau fichier et l'image initiale existe, pas de modification d'image
-                    dataToSend = { title, category, content, isPublished };
-                } else if (!imageFile && initialImage === null) { // Si pas de nouveau fichier et pas d'image initiale (retirée par l'utilisateur)
-                    dataToSend = { title, category, content, isPublished, image: '' }; // Envoie une chaîne vide pour supprimer l'image
-                }
-
-                response = await UpdateArticle(articleSlug, dataToSend);
-
+                // En mode édition, on envoie toujours FormData pour gérer l'image (nouvel upload/suppression/pas de changement)
+                response = await UpdateArticle(articleSlug, formData);
             } else {
-                // Pour la création, l'image est requise par notre backend actuel
+                // Pour la création, l'image est requise par notre backend
                 if (!imageFile) {
                     setFormError("Une image est requise pour créer un article.");
                     setLoading(false);
@@ -152,7 +163,7 @@ function ArticleForm({ articleSlug = null, onClose }) {
             }
         } catch (error) {
             console.error("Erreur API :", error);
-            setFormError("Une erreur inattendue est survenue.");
+            setFormError(error.response?.data?.message || "Une erreur inattendue est survenue.");
         } finally {
             setLoading(false);
         }
@@ -224,7 +235,7 @@ function ArticleForm({ articleSlug = null, onClose }) {
                             accept="image/*"
                             onChange={handleImageChange}
                             style={{ display: 'block', marginBottom: '10px' }}
-                            // Requis si en mode création et pas d'image initiale
+                            // L'image est requise seulement en mode création et si aucune image n'est déjà présente
                             required={!isEditMode && !imagePreview}
                         />
                         {imagePreview && (
@@ -250,9 +261,20 @@ function ArticleForm({ articleSlug = null, onClose }) {
                                 </IconButton>
                             </Box>
                         )}
-                        {!imagePreview && isEditMode && initialImage && (
-                            <Typography variant="body2" color="textSecondary">
-                                Aucune nouvelle image sélectionnée. L'image actuelle sera conservée.
+                        {/* ✅ Messages d'état pour l'utilisateur */}
+                        {!imagePreview && isEditMode && currentCloudinaryImageUrl && (
+                            <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                                Image actuelle supprimée. L'article n'aura plus d'image si vous ne sélectionnez pas de nouvelle image.
+                            </Typography>
+                        )}
+                        {!imagePreview && !isEditMode && (
+                            <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                                Aucune image sélectionnée. Une image est requise pour créer un article.
+                            </Typography>
+                        )}
+                        {!imagePreview && isEditMode && !currentCloudinaryImageUrl && (
+                            <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                                Aucune image sélectionnée. L'article n'aura pas d'image.
                             </Typography>
                         )}
                     </Box>

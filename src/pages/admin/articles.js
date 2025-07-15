@@ -2,11 +2,11 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import HeaderFeature from '@/components/admin/common/HeaderFeature';
-import DialogModal from '@/components/common/DialogModal'; // Pour le modal d'ajout/édition
-import ConfirmationModal from '@/components/common/ConfirmationModal'; // Pour le modal de confirmation de suppression
-import ArticleForm from '@/components/admin/forms/ArticleForm'; // Le formulaire d'article
-import ArticleCard from '@/components/admin/cards/ArticleCard'; // La carte d'affichage d'article
-import { GetAllArticles, DeleteArticle } from '@/apiCalls/articles'; // Fonctions API pour les articles
+import DialogModal from '@/components/common/DialogModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
+import ArticleForm from '@/components/admin/forms/ArticleForm';
+import ArticleCard from '@/components/admin/cards/ArticleCard';
+import { GetAllArticles, DeleteArticle } from '@/apiCalls/articles';
 
 import {
     Alert,
@@ -18,20 +18,20 @@ import {
 
 function Articles() {
     // --- États pour le modal d'ajout/édition ---
-    const [openArticleModal, setOpenArticleModal] = useState(false); // État pour ouvrir/fermer le modal d'ajout/édition
-    const [selectedArticleSlug, setSelectedArticleSlug] = useState(null); // Slug de l'article à modifier (null pour ajout)
-    const [articleModalTitle, setArticleModalTitle] = useState(''); // Titre du modal d'ajout/édition
+    const [openArticleModal, setOpenArticleModal] = useState(false);
+    const [selectedArticleSlug, setSelectedArticleSlug] = useState(null);
+    const [articleModalTitle, setArticleModalTitle] = useState('');
 
     // --- États pour la gestion des articles ---
-    const [articles, setArticles] = useState([]); // État pour stocker les articles
-    const [loadingArticles, setLoadingArticles] = useState(true); // État de chargement des articles
-    const [articlesError, setArticlesError] = useState(null); // État d'erreur lors du chargement des articles
+    const [articles, setArticles] = useState([]);
+    const [loadingArticles, setLoadingArticles] = useState(true);
+    const [articlesError, setArticlesError] = useState(null);
 
     // --- États pour le modal de confirmation de suppression ---
-    const [openConfirmModal, setOpenConfirmModal] = useState(false); // État pour ouvrir/fermer le modal de confirmation
-    const [articleToDeleteSlug, setArticleToDeleteSlug] = useState(null); // Slug de l'article en attente de suppression
-    const [deletingArticle, setDeletingArticle] = useState(false); // État de chargement pour la suppression
-    const [deleteError, setDeleteError] = useState(null); // État d'erreur pour la suppression
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const [articleToDeleteSlug, setArticleToDeleteSlug] = useState(null);
+    const [deletingArticle, setDeletingArticle] = useState(false);
+    const [deleteError, setDeleteError] = useState(null);
 
     // Fonction pour charger les articles depuis l'API
     const fetchArticles = useCallback(async () => {
@@ -83,20 +83,17 @@ function Articles() {
 
     // --- Gestion de la suppression d'article ---
 
-    // Ouvre le modal de confirmation de suppression
     const handleDeleteArticleClick = (slug) => {
-        setArticleToDeleteSlug(slug); // Stocke le slug de l'article à supprimer
-        setOpenConfirmModal(true); // Ouvre le modal de confirmation
-        setDeleteError(null); // Réinitialise l'erreur de suppression
+        setArticleToDeleteSlug(slug);
+        setOpenConfirmModal(true);
+        setDeleteError(null);
     };
 
-    // Fonction appelée lorsque l'utilisateur annule la suppression
     const handleCloseConfirmModal = () => {
         setOpenConfirmModal(false);
         setArticleToDeleteSlug(null);
     };
 
-    // Fonction appelée lorsque l'utilisateur confirme la suppression
     const handleConfirmDelete = useCallback(async () => {
         if (!articleToDeleteSlug) return; // S'assurer qu'un slug est présent
 
@@ -104,7 +101,7 @@ function Articles() {
         setDeleteError(null); // Réinitialise les erreurs
 
         try {
-            const response = await DeleteArticle(articleToDeleteSlug); // Appel à l'API de suppression
+            const response = await DeleteArticle(articleToDeleteSlug);
             if (response.success) {
                 // Si la suppression réussit, ferme le modal et rafraîchit la liste
                 handleCloseConfirmModal();

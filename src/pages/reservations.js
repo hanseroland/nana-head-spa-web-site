@@ -63,6 +63,7 @@ const Reservations = () => {
         image="/images/pexels-arina-krasnikova-6663572.jpg"
         title={"Réservez votre moment de détente"}
         subtitle={"Choisissez votre soin et réservez en ligne pour profiter d'une expérience de bien-être unique."}
+        pageName="reservations"
       />
 
       <Container maxWidth="lg">

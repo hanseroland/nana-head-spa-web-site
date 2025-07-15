@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Box, Typography, useTheme, IconButton } from '@mui/material';
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { Box, Typography, useTheme, IconButton, CircularProgress } from '@mui/material';
 import Image from 'next/image'; // Optimisation Next.js
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
+import { GetAllGalleryImages } from '@/apiCalls/gallery'; // Assurez-vous que ce chemin est correct
 
-const images = [
+// Galerie statique par défaut
+const staticImages = [
   { src: '/images/nana-head.jpeg', label: "Nawël responsable de Nana Head Spa" },
   { src: '/images/spa-nana-head.jpeg', label: 'Interieur Nana Head Spa' },
   { src: '/images/arche-nana-head.jpeg', label: 'Arche' },
@@ -14,26 +16,68 @@ const images = [
   { src: '/images/archenana-head-spa.jpeg', label: 'Interieur Nana Head Spa' },
 ];
 
-
 const InfiniteSlider = () => {
-
   const theme = useTheme();
   const [startIndex, setStartIndex] = useState(0);
+  const [galleryImages, setGalleryImages] = useState([]); // État pour les images de la BDD
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const visibleItems = 8; // Nombre d'images visibles
 
-  // Duplique les images pour l'effet infini
-  const duplicatedImages = [...images, ...images, ...images];
+  // Fonction pour charger les images de la galerie depuis l'API
+  const fetchGalleryImages = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await GetAllGalleryImages();
+      if (response.success && response.data) {
+        // Formate les images de la BDD pour qu'elles correspondent au format attendu par le slider
+        const formattedImages = response.data.map(img => ({
+          src: img.image.url, // Supposons que l'URL est dans img.image.url
+          label: img.title || 'Image de la galerie',
+        }));
+        setGalleryImages(formattedImages);
+      } else {
+        setError(response.message || "Erreur lors du chargement des images de la galerie.");
+        setGalleryImages([]); // En cas d'erreur, assurez-vous que le tableau est vide
+      }
+    } catch (err) {
+      console.error("Erreur API lors du chargement des images de la galerie:", err);
+      setError("Impossible de se connecter au serveur pour récupérer les images de la galerie.");
+      setGalleryImages([]); // En cas d'erreur de connexion, assurez-vous que le tableau est vide
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGalleryImages();
+  }, [fetchGalleryImages]);
+
+
+  // Déterminez la source des images : BDD ou statique
+  const imagesToDisplay = galleryImages.length > 2 ? galleryImages : staticImages;
+
+  // Duplique les images pour l'effet infini.
+  // On duplique imagesToDisplay, pas seulement staticImages.
+  const duplicatedImages = [...imagesToDisplay, ...imagesToDisplay, ...imagesToDisplay];
+
 
   // Auto-scroll avec pause au hover
   useEffect(() => {
+    // S'assurer qu'il y a des images à faire défiler
+    if (imagesToDisplay.length === 0) return;
+
     const interval = setInterval(() => {
-      setStartIndex(prev => (prev + 1) % images.length);
+      setStartIndex(prev => (prev + 1) % imagesToDisplay.length);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [imagesToDisplay.length]); // Dépend de la longueur des images actuellement affichées
 
-  // Images visibles actuellement
+  // Images visibles actuellement pour le slider infini
+  // On utilise imagesToDisplay.length ici pour la logique de modulo
   const visibleImages = duplicatedImages.slice(
     startIndex,
     startIndex + visibleItems
@@ -70,117 +114,158 @@ const InfiniteSlider = () => {
         Rassurez-vous par l’image : découvrez notre univers doux et relaxant.
       </Typography>
 
-      {/* Boutons de navigation */}
-      <IconButton
-        onClick={() => setStartIndex(prev => (prev - 1 + images.length) % images.length)}
-        sx={{
-          position: 'absolute',
-          left: 16,
-          top: '50%',
-          zIndex: 2,
-          backgroundColor: theme.palette.primary.main,
-          color: 'white',
-          '&:hover': {
-            backgroundColor: theme.palette.primary.dark
-          }
-        }}
-      >
-        <ChevronLeft />
-      </IconButton>
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+          <CircularProgress />
+          <Typography ml={2}>Chargement de la galerie...</Typography>
+        </Box>
+      )}
 
-      <IconButton
-        onClick={() => setStartIndex(prev => (prev + 1) % images.length)}
-        sx={{
-          position: 'absolute',
-          right: 16,
-          top: '50%',
-          zIndex: 2,
-          backgroundColor: theme.palette.primary.main,
-          color: 'white',
-          '&:hover': {
-            backgroundColor: theme.palette.primary.dark
-          }
-        }}
-      >
-        <ChevronRight />
-      </IconButton>
+      {error && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+          <Typography color="error" textAlign="center">
+            {error}
+            <br />
+            Affichage de la galerie par défaut.
+          </Typography>
+        </Box>
+      )}
 
-      {/* Conteneur du slider */}
-      <motion.div
-        animate={{
-          x: `-${(startIndex % images.length) * (100 / visibleItems)}%`
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 300,
-          damping: 30
-        }}
-        style={{
-          display: 'flex',
-          width: `${(duplicatedImages.length / visibleItems) * 100}%`
-        }}
-      >
-        {duplicatedImages.map((image, index) => (
-          <Box
-            key={`${image.src}-${index}`}
-            sx={{
-              flex: `0 0 ${100 / visibleItems}%`,
-              px: 1,
-              position: 'relative',
-              aspectRatio: '4/3'
-            }}
-          >
-            <Box
-              sx={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-                borderRadius: 2,
-                overflow: 'hidden',
-                boxShadow: theme.shadows[2],
-                '&:hover': {
-                  boxShadow: theme.shadows[6]
-                }
-              }}
-            >
-              <Image
-                src={image.src}
-                alt={image.label}
-                fill
-                style={{ objectFit: 'cover' }}
-              />
+      {!loading && imagesToDisplay.length === 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+          <Typography color="text.secondary" textAlign="center">
+            Aucune image disponible pour le moment.
+          </Typography>
+        </Box>
+      )}
 
-              {/* Overlay texte */}
-              <Box
+      {!loading && imagesToDisplay.length > 0 && (
+        <>
+          {/* Boutons de navigation - conditionnels si au moins une image */}
+          {imagesToDisplay.length > 0 && (
+            <>
+              <IconButton
+                onClick={() => setStartIndex(prev => (prev - 1 + imagesToDisplay.length) % imagesToDisplay.length)}
                 sx={{
                   position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  p: 2,
-                  background: theme.palette.mode === 'dark'
-                    ? 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)'
-                    : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)'
+                  left: 16,
+                  top: '50%',
+                  zIndex: 2,
+                  backgroundColor: theme.palette.primary.main,
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.dark
+                  }
                 }}
               >
-                <Typography
-                  variant="subtitle1"
-                  color="white"
+                <ChevronLeft />
+              </IconButton>
+
+              <IconButton
+                onClick={() => setStartIndex(prev => (prev + 1) % imagesToDisplay.length)}
+                sx={{
+                  position: 'absolute',
+                  right: 16,
+                  top: '50%',
+                  zIndex: 2,
+                  backgroundColor: theme.palette.primary.main,
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.dark
+                  }
+                }}
+              >
+                <ChevronRight />
+              </IconButton>
+            </>
+          )}
+
+
+          {/* Conteneur du slider */}
+          <motion.div
+            // Animer le x en fonction du startIndex et de la taille des éléments
+            animate={{
+              x: `-${(startIndex % imagesToDisplay.length) * (100 / visibleItems)}%`
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 30
+            }}
+            style={{
+              display: 'flex',
+              // La largeur doit être basée sur le nombre total d'images dupliquées
+              width: `${(duplicatedImages.length / visibleItems) * 100}%`
+            }}
+          >
+            {duplicatedImages.map((image, index) => (
+              <Box
+                key={`${image.src}-${index}`} // Clé unique combinant src et index pour éviter les problèmes avec les images dupliquées
+                sx={{
+                  flex: `0 0 ${100 / visibleItems}%`,
+                  px: 1,
+                  position: 'relative',
+                  aspectRatio: '4/3' // Maintient le ratio d'aspect pour toutes les images
+                }}
+              >
+                <Box
                   sx={{
-                    fontWeight: 500,
-                    textAlign: 'center',
-                    textShadow: theme.palette.mode === 'dark'
-                      ? '0 1px 3px rgba(0,0,0,0.8)'
-                      : '0 1px 2px rgba(0,0,0,0.8)'
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                    boxShadow: theme.shadows[2],
+                    '&:hover': {
+                      boxShadow: theme.shadows[6]
+                    }
                   }}
                 >
-                 
-                </Typography>
+                  <Image
+                    src={image.src}
+                    alt={image.label}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    // Ajoutez un gestionnaire d'erreurs pour les images si nécessaire
+                    onError={(e) => {
+                      console.error("Erreur de chargement d'image:", image.src, e);
+                      e.target.style.display = 'none'; // Cache l'image cassée
+                    }}
+                  />
+
+                  {/* Overlay texte */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      p: 2,
+                      background: theme.palette.mode === 'dark'
+                        ? 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)'
+                        : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)'
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      color="white"
+                      sx={{
+                        fontWeight: 500,
+                        textAlign: 'center',
+                        textShadow: theme.palette.mode === 'dark'
+                          ? '0 1px 3px rgba(0,0,0,0.8)'
+                          : '0 1px 2px rgba(0,0,0,0.8)'
+                      }}
+                    >
+                      {image.label}
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-          </Box>
-        ))}
-      </motion.div>
+            ))}
+          </motion.div>
+        </>
+      )}
     </Box>
   );
 };

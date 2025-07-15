@@ -14,7 +14,7 @@ import SocialMediaContact from "@/components/ui/contact/SocialMediaContact";
 
 export default function Contact() {
 
-    
+
 
     return (
         <>
@@ -23,24 +23,25 @@ export default function Contact() {
                 <meta name="description" content="Découvrez nos spa head pour le bien-être et la relaxation." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-          
+
             <ReusableHero
                 image="/images/archenana-head-spa.jpeg"
                 title="Un moment de bien-être commence par un premier contact"
                 subtitle="Je suis là pour répondre à vos questions et planifier votre rendez-vous."
+                pageName="contact"
 
             />
 
             <Container maxWidth="lg">
-                <QuickContactInfo/>
-                <SocialMediaContact/>
+                <QuickContactInfo />
+                <SocialMediaContact />
                 {/*<ContactForm/>*/}
-                <GoogleMapEmbed/>
+                <GoogleMapEmbed />
                 {/*<CallToActionReservation/>*/}
             </Container>
-            
-            
-           
+
+
+
         </>
     );
 }

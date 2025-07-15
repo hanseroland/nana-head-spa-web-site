@@ -1,6 +1,6 @@
 // src/components/ui/ChatWindow.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, List, ListItem, ListItemText, Avatar, IconButton, InputAdornment } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, List, ListItem, Avatar, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import { useChat } from '@/context/ChatContext';

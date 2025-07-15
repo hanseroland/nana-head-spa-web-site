@@ -32,7 +32,7 @@ export default function Blog({ initialArticles = [], totalArticlesCount = 0, err
             : [{ name: 'Auteur Inconnu', avatar: '/images/avatar/default_avatar.png' }]; // Toujours un tableau, même si vide ou inconnu
 
         return {
-            img: article.image || 'https://via.placeholder.com/600x400?text=Article+Image', // Image par défaut si manquante
+            img: article.image?.url || 'https://via.placeholder.com/600x400?text=Article+Image', // Image par défaut si manquante
             tag: article.category || 'Non classifié',
             title: article.title || 'Titre manquant',
             description: article.content ? (article.content.substring(0, 150) + (article.content.length > 150 ? '...' : '')) : 'Contenu manquant.',
@@ -79,19 +79,10 @@ export default function Blog({ initialArticles = [], totalArticlesCount = 0, err
     };
 
     useEffect(() => {
-        // La condition pour éviter un double fetch au premier chargement est plus complexe
-        // avec la pagination et la recherche. Une approche plus simple est de toujours fetch
-        // si les paramètres changent, et laisser getServerSideProps s'occuper du premier rendu.
-        // Si les `initialArticles` suffisent pour le premier rendu et qu'aucun filtre n'est appliqué,
-        // vous pouvez ajouter une condition pour ne pas appeler `fetchArticles` immédiatement après `getServerSideProps`.
 
-        // Option 1: Toujours appeler fetchArticles si les dépendances changent (plus simple à gérer)
         fetchArticles(selectedCategory, searchTerm, page);
 
-        // Option 2 (plus complexe mais peut éviter un appel API redondant au premier chargement):
-        // if (!(page === 1 && selectedCategory === "Toutes les catégories" && searchTerm === "" && initialArticles.length > 0)) {
-        //     fetchArticles(selectedCategory, searchTerm, page);
-        // }
+
     }, [selectedCategory, searchTerm, page]);
 
 
