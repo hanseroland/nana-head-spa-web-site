@@ -194,9 +194,18 @@ export const ChatProvider = ({ children }) => {
         };
 
         try {
+            if (socket.current && socket.current.connected) {
+                socket.current.emit('send_message', {
+                    conversationId: selectedConversation._id,
+                    sender: currentUser._id,
+                    content: content,
+                    receiver: receiverId
+                });
+            }
             const response = await SendMessage(messageDataForApi);
             if (response.success) {
                 const sentMessage = response.data;
+
                 toast.success('Message envoyé !');
             } else {
                 toast.error("Échec de l'envoi du message via API.");

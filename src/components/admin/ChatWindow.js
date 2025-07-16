@@ -34,7 +34,7 @@ const ChatWindow = ({ isOpen, onClose, embedded = false, isClientMode = false })
             // Ici, on s'assure juste que l'état local 'messages' est celui du contexte
             // Si la logique de `selectConversation` du context est bonne, on n'a pas besoin de fetch ici
             // mais on réinitialise au cas où la conversation change sans passer par selectConversation (moins probable)
-            setMessages(messages); // Assurer la synchro avec l'état global du contexte
+            //setMessages(messages); // Assurer la synchro avec l'état global du contexte
         } else {
             setMessages([]); // Réinitialiser si aucune conversation n'est sélectionnée
         }
