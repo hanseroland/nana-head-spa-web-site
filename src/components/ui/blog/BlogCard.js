@@ -150,7 +150,7 @@ export default function BlogCard({ img, tag, title, description, authors, date, 
             {getExcerpt(description)}
           </StyledTypography>
         </SyledCardContent>
-        <Author authors={authors} date={date} />
+        {/* <Author authors={authors} date={date} />*/}
       </SyledCard>
     </Link>
   );

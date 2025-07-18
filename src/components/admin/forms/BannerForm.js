@@ -26,7 +26,10 @@ const PAGE_NAMES = [
     { value: 'formules', label: 'Formules' },
     { value: 'reservations', label: 'Réservations' },
     { value: 'contact', label: 'Contact' },
-    // Ajoutez d'autres pages si nécessaire
+    { value: 'nouveautes', label: 'Nouveautés/Conseils' },
+    { value: 'qui-suis-je', label: 'Section: Qui suis-je' },
+    { value: 'univers-de-nana-head-spa', label: 'Section : Univers de Nana Head Spa' },
+    // Ajoutez d'autres pages si nécessaire univers de Nana Head Spa
 ];
 
 // Types de bannières (à adapter selon votre backend)

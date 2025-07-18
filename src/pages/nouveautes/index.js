@@ -8,6 +8,7 @@ import CategoryChips from "@/components/ui/blog/CategoryChips";
 import BlogGrid from "@/components/ui/blog/BlogGrid";
 import { useMemo, useState, useEffect } from "react";
 import { GetAllArticles } from "@/apiCalls/articles";
+import ReusableHero from "@/components/ui/ReusableHero";
 
 const POSTS_PER_PAGE = 4;
 
@@ -127,6 +128,12 @@ export default function Blog({ initialArticles = [], totalArticlesCount = 0, err
                 <meta name="description" content="Découvrez mes nouveautés / conseils du moment" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
+            <ReusableHero
+                image=""
+                title="Découvrez mes nouveautés / conseils du moment"
+                subtitle="Restez à jour avec les dernières nouveautés et conseils pour votre bien-être."
+                pageName="nouveautes"
+            />
             <Box
                 component="section"
                 sx={{
@@ -138,7 +145,6 @@ export default function Blog({ initialArticles = [], totalArticlesCount = 0, err
                 }}
             >
                 <Container maxWidth="lg">
-                    <BlogHeader />
 
                     <Box
                         sx={{

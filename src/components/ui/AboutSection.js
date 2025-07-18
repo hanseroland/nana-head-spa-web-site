@@ -1,13 +1,83 @@
-import React from "react";
-import { Box, Typography, Grid, useTheme } from "@mui/material";
+import React, { useEffect, useState, useCallback } from "react";
+import { Box, Typography, Grid, useTheme, Skeleton } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import globalVariables from '@/config/globalVariables';
+import { GetAllPageBanners } from '@/apiCalls/banners';
 
 const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
 
+const PAGE_NAME_KEY = "qui-suis-je"; // The specific page name key
+
+
 function AboutSection() {
   const theme = useTheme();
+
+  const [bannerImageUrl, setBannerImageUrl] = useState(null);
+  const [loadingBanner, setLoadingBanner] = useState(true);
+  const [errorBanner, setErrorBanner] = useState(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const fetchSpaIntroBanner = useCallback(async () => {
+    setLoadingBanner(true);
+    setErrorBanner(null);
+    setImageLoaded(false);
+    try {
+      const response = await GetAllPageBanners();
+      if (response.success && response.data) {
+        const foundBanner = response.data.find(
+          (banner) => banner.pageName === PAGE_NAME_KEY && banner.type === 'image' && banner.media?.url
+        );
+
+        if (foundBanner) {
+          setBannerImageUrl(foundBanner.media.url);
+          // imageLoaded will be set to true by the useEffect monitoring image preload
+        } else {
+          setBannerImageUrl(null); // No specific image found for this page/type
+          setImageLoaded(true); // No image to load, consider it "loaded" for UI purposes
+          setErrorBanner("Aucune image de bannière trouvée pour cette section.");
+        }
+      } else {
+        setErrorBanner(response.message || "Erreur lors du chargement des bannières.");
+        setBannerImageUrl(null);
+        setImageLoaded(true); // API error, no image to load, consider "loaded"
+      }
+    } catch (err) {
+      console.error(`Erreur API lors du chargement de la bannière pour ${PAGE_NAME_KEY}:`, err);
+      setErrorBanner("Impossible de se connecter au serveur pour récupérer la bannière.");
+      setBannerImageUrl(null);
+      setImageLoaded(true); // Network error, no image to load, consider "loaded"
+    } finally {
+      setLoadingBanner(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSpaIntroBanner();
+  }, [fetchSpaIntroBanner]);
+
+  // Preload image to set imageLoaded state
+  useEffect(() => {
+    if (!loadingBanner && bannerImageUrl && !imageLoaded) {
+      const img = new window.Image(); // Use window.Image to ensure it's client-side
+      img.src = bannerImageUrl;
+      img.onload = () => {
+        setImageLoaded(true);
+      };
+      img.onerror = (e) => {
+        console.error("Erreur de préchargement de l'image de bannière:", bannerImageUrl, e);
+        setErrorBanner("Le chargement de l'image a échoué. Veuillez vérifier l'URL ou le fichier.");
+        setBannerImageUrl(null); // Clear the problematic URL
+        setImageLoaded(true); // Consider it "loaded" to hide skeleton
+      };
+    } else if (!loadingBanner && !bannerImageUrl && !imageLoaded) {
+      // If API finished and no URL, mark image as loaded
+      setImageLoaded(true);
+    }
+  }, [loadingBanner, bannerImageUrl, imageLoaded]);
+
+  const showImage = !loadingBanner && imageLoaded && bannerImageUrl;
 
   return (
     <Box
@@ -26,30 +96,46 @@ function AboutSection() {
         justifyContent="center"
       >
         {/* Image - portrait */}
-        <Grid  size={{ xs: 12, md: 6 }} >
-          <MotionBox
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-            viewport={{ once: true }}
+        <Grid size={{ xs: 12, md: 6 }} >
+          <Box
+
             sx={{
               borderRadius: "2rem",
               overflow: "hidden",
               boxShadow: "0 15px 40px rgba(0,0,0,0.1)",
             }}
           >
-            <Image
-              src="/images/nana-head.jpeg" // à remplacer par ton image réelle
-              alt="Portrait de Gaëlle, fondatrice de l'institut"
-              width={400}
-              height={600}
-              style={{ width: "100%", height: "auto", objectFit: "cover" }}
-            />
-          </MotionBox>
+            {showImage ? (
+              <Image
+                src={bannerImageUrl}
+                alt="Portrait de Nawële, fondatrice de l'institut"
+                width={400}
+                height={600}
+                style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                layout="responsive"
+                objectFit="cover"
+                quality={90}
+                priority
+              />
+            ) : (
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height="100%"
+                animation="wave"
+                sx={{
+                  bgcolor: 'rgba(0, 0, 0, 0.1)',
+                }}
+              />
+            )}
+
+          </Box>
         </Grid>
 
+
+
         {/* Texte */}
-        <Grid  size={{ xs: 12, md: 12 }} >
+        <Grid size={{ xs: 12, md: 12 }} >
           <MotionTypography
             variant="h3"
             component="h2"

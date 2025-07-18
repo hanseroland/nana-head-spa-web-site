@@ -109,7 +109,7 @@ const ArticlePage = ({ article, error, otherArticles = [] }) => { // Accepte now
                 <Container maxWidth="md">
                     <Box sx={{ mb: 4 }}>
                         <img
-                            src={formattedArticle.img}
+                            src={formattedArticle.img.url}
                             alt={formattedArticle.title}
                             style={{
                                 width: '100%',
@@ -189,7 +189,7 @@ const ArticlePage = ({ article, error, otherArticles = [] }) => { // Accepte now
                                 {otherArticles.map((otherArticle) => (
                                     <Grid size={{ xs: 12, md: 4, sm: 6 }} key={otherArticle.slug}>
                                         <BlogCard
-                                            img={otherArticle.image || 'https://via.placeholder.com/600x400?text=Article+Image'}
+                                            img={otherArticle.image.url || 'https://via.placeholder.com/600x400?text=Article+Image'}
                                             tag={otherArticle.category || 'Non classifié'}
                                             title={otherArticle.title || 'Titre manquant'}
                                             description={otherArticle.content || 'Contenu manquant.'} // BlogCard gérera l'extrait

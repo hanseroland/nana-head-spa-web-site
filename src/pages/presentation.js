@@ -23,7 +23,7 @@ export default function Presentation() {
             </Head>
 
             <ReusableHero
-                image="/images/archenana-head-spa.jpeg"
+                image=""
                 title="Présentation de NANA HEAD SPA"
                 subtitle="Découvrez ma univers de bien-être et de détente, où chaque détail est pensé pour vous offrir une expérience inoubliable."
                 pageName="presentation"

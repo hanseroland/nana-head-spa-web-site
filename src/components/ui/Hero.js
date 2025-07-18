@@ -1,53 +1,55 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box, Button, Container, Typography, CircularProgress } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material"; // CircularProgress removed
+import { Skeleton } from "@mui/material"; // Skeleton imported
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles";
-import Bubble from "./Bubble"; // Assurez-vous que ce chemin est correct
+import Bubble from "./Bubble";
 import globalVariables from "@/config/globalVariables";
 import { useRouter } from "next/router";
-import { GetAllPageBanners } from '@/apiCalls/banners'; // Importez votre appel API pour les bannières
+import { GetAllPageBanners } from '@/apiCalls/banners';
 
 export default function Hero() {
   const theme = useTheme();
   const router = useRouter();
 
-  const [bannerVideoUrl, setBannerVideoUrl] = useState(null); // URL de la vidéo de la BDD
-  const [loadingBanner, setLoadingBanner] = useState(true);
+  const [bannerVideoUrl, setBannerVideoUrl] = useState(null);
+  const [loadingApi, setLoadingApi] = useState(true); // Renamed from loadingBanner to clarify API call state
   const [errorBanner, setErrorBanner] = useState(null);
+  const [videoLoaded, setVideoLoaded] = useState(false); // New state to track actual video loading
 
-  // Vidéo statique par défaut
-  const staticVideoSrc = "/videos/spa-head.mp4";
-
-  // Charger les bannières de la page d'accueil
   const fetchHomeBanner = useCallback(async () => {
-    setLoadingBanner(true);
+    setLoadingApi(true);
     setErrorBanner(null);
+    setVideoLoaded(false); // Reset video loaded state
+    setBannerVideoUrl(null); // Clear previous URL to ensure skeleton shows if new fetch starts
+
     try {
       const response = await GetAllPageBanners();
       if (response.success && response.data) {
-        // Trouvez la bannière pour la page 'home' qui est de type 'video'
         const homeVideoBanner = response.data.find(
           (banner) => banner.pageName === 'accueil' && banner.type === 'video' && banner.media?.url
         );
 
         if (homeVideoBanner) {
           setBannerVideoUrl(homeVideoBanner.media.url);
+          // videoLoaded will be set to true by the useEffect monitoring video preload
         } else {
-          // Si aucune bannière vidéo pour la page 'home' n'est trouvée, on reste sur le null,
-          // ce qui fera afficher la vidéo statique.
+          setErrorBanner("Aucune bannière vidéo n'a été trouvée pour la page d'accueil.");
           setBannerVideoUrl(null);
+          setVideoLoaded(true); // No video to load, so consider it "loaded" for UI purposes
         }
       } else {
-        // En cas d'échec de l'API, affiche un message d'erreur et utilise la vidéo statique
         setErrorBanner(response.message || "Erreur lors du chargement des bannières.");
         setBannerVideoUrl(null);
+        setVideoLoaded(true); // API error, no video to load, consider "loaded"
       }
     } catch (err) {
       console.error("Erreur API lors du chargement des bannières:", err);
       setErrorBanner("Impossible de se connecter au serveur pour récupérer les bannières.");
       setBannerVideoUrl(null);
+      setVideoLoaded(true); // Network error, no video to load, consider "loaded"
     } finally {
-      setLoadingBanner(false);
+      setLoadingApi(false);
     }
   }, []);
 
@@ -55,10 +57,26 @@ export default function Hero() {
     fetchHomeBanner();
   }, [fetchHomeBanner]);
 
-  // Déterminez la vidéo à afficher
-  // Si loadingBanner est vrai, on ne sait pas encore si on a une vidéo, donc on n'affiche rien (ou un placeholder).
-  // Une fois le chargement terminé, si bannerVideoUrl est défini, on l'utilise, sinon la statique.
-  const videoToDisplay = loadingBanner ? null : (bannerVideoUrl || staticVideoSrc);
+  // Preload video to set videoLoaded state
+  useEffect(() => {
+    if (!loadingApi && bannerVideoUrl && !videoLoaded) {
+      const videoElement = document.createElement('video');
+      videoElement.src = bannerVideoUrl;
+      videoElement.preload = 'auto'; // Request browser to preload
+      videoElement.onloadeddata = () => { // Or oncanplaythrough for more certainty
+        setVideoLoaded(true);
+      };
+      videoElement.onerror = (e) => {
+        console.error("Erreur de préchargement de la vidéo :", bannerVideoUrl, e);
+        setErrorBanner("Impossible de charger la vidéo de la bannière. Le fichier vidéo est peut-être corrompu ou inaccessible.");
+        setBannerVideoUrl(null); // Remove the problematic URL
+        setVideoLoaded(true); // Consider it "loaded" to hide skeleton
+      };
+    } else if (!loadingApi && !bannerVideoUrl && !videoLoaded) {
+      // If API finished and no URL, mark video as loaded
+      setVideoLoaded(true);
+    }
+  }, [loadingApi, bannerVideoUrl, videoLoaded]);
 
   const bubbleVariants = {
     animate: {
@@ -71,6 +89,9 @@ export default function Hero() {
       },
     },
   };
+
+  const showVideoContent = !loadingApi && videoLoaded && bannerVideoUrl;
+  const showNoVideoMessage = !loadingApi && videoLoaded && !bannerVideoUrl;
 
   return (
     <Box
@@ -92,7 +113,6 @@ export default function Hero() {
     >
       <Bubble />
 
-      {/* Bulles flottantes */}
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 0.3, y: 0 }}
@@ -135,7 +155,6 @@ export default function Hero() {
           zIndex: 2,
         }}
       >
-        {/* Partie gauche */}
         <Box
           component={motion.div}
           initial={{ x: -50, opacity: 0 }}
@@ -228,7 +247,6 @@ export default function Hero() {
           </Box>
         </Box>
 
-        {/* Partie droite (vidéo) */}
         <Box
           component={motion.div}
           initial={{ x: 50, opacity: 0 }}
@@ -256,37 +274,46 @@ export default function Hero() {
               mx: "auto",
             }}
           >
-            {loadingBanner ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-                <CircularProgress color="secondary" />
-              </Box>
-            ) : videoToDisplay ? (
+            {loadingApi || !videoLoaded ? (
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height="100%"
+                animation="wave"
+                sx={{
+                  backgroundColor: theme.palette.grey[400],
+                  transform: "scale(1.1) rotate(-10deg)",
+                  transformOrigin: "center",
+                }}
+              />
+            ) : showVideoContent ? (
               <video
-                key={videoToDisplay} // Ajoute une clé pour forcer le re-rendu si l'URL change
-                src={videoToDisplay}
+                key={bannerVideoUrl}
+                src={bannerVideoUrl}
                 autoPlay
                 loop
                 muted
-                playsInline // Important pour la lecture automatique sur mobile
+                playsInline
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  transform: "scale(1.1) rotate(-10deg)", // Zoom + inclinaison vers la gauche
+                  transform: "scale(1.1) rotate(-10deg)",
                   transformOrigin: "center",
                 }}
                 onError={(e) => {
-                  console.error("Erreur de chargement de la vidéo :", videoToDisplay, e);
-                  // Optionnel : Bascule vers la vidéo statique en cas d'échec de la dynamique
-                  setBannerVideoUrl(staticVideoSrc);
-                  setErrorBanner("Impossible de charger la vidéo de la bannière. Affichage de la vidéo par défaut.");
+                  console.error("Erreur de lecture de la vidéo :", bannerVideoUrl, e);
+                  setBannerVideoUrl(null); // Clear the problematic URL
+                  setErrorBanner("La vidéo ne peut pas être lue.");
                 }}
               />
-            ) : (
+            ) : showNoVideoMessage ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', backgroundColor: theme.palette.grey[300] }}>
-                <Typography variant="caption" color="text.secondary">Vidéo non disponible</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {errorBanner || "Vidéo non disponible pour le moment."}
+                </Typography>
               </Box>
-            )}
+            ) : null}
           </Box>
         </Box>
       </Container>

@@ -60,7 +60,7 @@ const Reservations = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <ReusableHero
-        image="/images/pexels-arina-krasnikova-6663572.jpg"
+        image=""
         title={"Réservez votre moment de détente"}
         subtitle={"Choisissez votre soin et réservez en ligne pour profiter d'une expérience de bien-être unique."}
         pageName="reservations"

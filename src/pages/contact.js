@@ -25,7 +25,7 @@ export default function Contact() {
             </Head>
 
             <ReusableHero
-                image="/images/archenana-head-spa.jpeg"
+                image=""
                 title="Un moment de bien-être commence par un premier contact"
                 subtitle="Je suis là pour répondre à vos questions et planifier votre rendez-vous."
                 pageName="contact"

@@ -22,7 +22,7 @@ export default function Formules() {
             </Head>
 
             <ReusableHero
-                image="/images/pexels-craytive-1502219.jpg"
+                image=""
                 title="Mes Formules : Découvrez mes rituels de soin capillaire"
                 subtitle="Chaque formule est conçue pour allier relaxation, soin du cuir chevelu et beauté naturelle des cheveux."
                 pageName="formules"
