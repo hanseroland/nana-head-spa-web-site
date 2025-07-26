@@ -13,13 +13,10 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Link from 'next/link';
-import { Divider, useTheme, CircularProgress } from '@mui/material'; // Ajout de CircularProgress
+import { Divider, useTheme, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
-// ✅ Importez le hook useAuth
 import { useAuth } from '@/context/AuthContext';
-import { GetAllArticles } from '@/apiCalls/articles'; // Adjust path if necessary
-
-
+import { GetAllArticles } from '@/apiCalls/articles';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',
@@ -38,53 +35,40 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 export default function Navbar({ themeMode, setThemeMode }) {
-
     const [open, setOpen] = React.useState(false);
     const [hasNewsOrTips, setHasNewsOrTips] = React.useState(false);
     const theme = useTheme();
     const router = useRouter();
     const currentPath = router.pathname;
 
-    //l'état d'authentification et l'utilisateur depuis le contexte
     const { isAuthenticated, loading, currentUser, logout } = useAuth();
 
-
-
-    // ✅ Récupérer les articles pour vérifier les "nouveautés" ou "conseils" publiés
     React.useEffect(() => {
         const fetchPublishedArticles = async () => {
             try {
-                // Nous allons faire deux appels pour chaque catégorie
-                // Ou mieux: un seul appel avec des ORs si votre backend le supporte.
-                // Pour l'instant, faisons deux appels pour plus de clarté.
                 const filters = { isPublished: true };
 
-                // Vérifier les nouveautés
                 const newsResponse = await GetAllArticles({ ...filters, category: 'nouveauté' });
                 if (newsResponse.success && newsResponse.data && newsResponse.data.length > 0) {
                     setHasNewsOrTips(true);
-                    return; // Si des nouveautés sont trouvées, on arrête ici
+                    return;
                 }
 
-                // Si pas de nouveautés, vérifier les conseils
                 const tipsResponse = await GetAllArticles({ ...filters, category: 'conseil' });
                 if (tipsResponse.success && tipsResponse.data && tipsResponse.data.length > 0) {
                     setHasNewsOrTips(true);
-                    return; // Si des conseils sont trouvés, on arrête ici
+                    return;
                 }
 
-                // Si ni nouveauté ni conseil publié
                 setHasNewsOrTips(false);
-
             } catch (error) {
                 console.error("Erreur lors de la récupération des articles publiés:", error);
-                setHasNewsOrTips(false); // Assumer qu'il n'y a pas d'articles si erreur
+                setHasNewsOrTips(false);
             }
         };
 
         fetchPublishedArticles();
-    }, []); // Dépendances vides pour n'exécuter qu'une fois au montage
-
+    }, []);
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -94,16 +78,17 @@ export default function Navbar({ themeMode, setThemeMode }) {
         setThemeMode((prevMode) => (prevMode === 'dark' ? 'light' : 'dark'));
     };
 
-    // Détermine le chemin du compte en fonction du rôle de l'utilisateur
+    const handleNavLinkClick = () => {
+        setOpen(false); // Ferme le tiroir lors du clic sur un lien
+    };
+
     const accountPath = currentUser?.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte';
 
-    // ✅ Création dynamique des liens de navigation
     const navLinks = [
         { label: 'Présentation', href: '/presentation' },
         { label: 'Formules', href: '/formules' },
         { label: 'Réservations', href: '/reservations' },
-        // N'inclure "Nouveautés" que si hasNewsOrTips est vrai
-        ...(hasNewsOrTips ? [{ label: 'Nouveautés & Conseils', href: '/nouveautes' }] : []), // Ajustez l'URL de votre page "Nouveautés & Conseils"
+        ...(hasNewsOrTips ? [{ label: 'Nouveautés & Conseils', href: '/nouveautes' }] : []),
         { label: 'Contact', href: '/contact' }
     ];
 
@@ -120,7 +105,6 @@ export default function Navbar({ themeMode, setThemeMode }) {
         >
             <Container maxWidth="lg">
                 <StyledToolbar variant="dense" disableGutters>
-                    {/* LOGO */}
                     <Link href="/" passHref>
                         <Box
                             component="img"
@@ -138,7 +122,6 @@ export default function Navbar({ themeMode, setThemeMode }) {
                     </Link>
 
                     <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-                        {/* LIENS DESKTOP */}
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                             {navLinks.map((link) => {
                                 const isActive = currentPath === link.href;
@@ -174,7 +157,6 @@ export default function Navbar({ themeMode, setThemeMode }) {
                         </Box>
                     </Box>
 
-                    {/* ACTIONS DESKTOP */}
                     <Box
                         sx={{
                             display: { xs: 'none', md: 'flex' },
@@ -192,7 +174,6 @@ export default function Navbar({ themeMode, setThemeMode }) {
                             {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon sx={{ color: "#fff" }} />}
                         </IconButton>
 
-                        {/* ✅ Conditionnement des boutons en fonction de l'état d'authentification */}
                         {loading ? (
                             <CircularProgress size={24} color="primary" />
                         ) : (
@@ -219,8 +200,8 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                         </Button>
                                     </Link>
                                     <Button
-                                        onClick={logout} // Utilise la fonction logout du contexte
-                                        color="secondary" // ou une autre couleur appropriée
+                                        onClick={logout}
+                                        color="secondary"
                                         variant="outlined"
                                         size="medium"
                                         sx={{
@@ -285,8 +266,6 @@ export default function Navbar({ themeMode, setThemeMode }) {
                         )}
                     </Box>
 
-
-                    {/* MENU MOBILE */}
                     <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
                         <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
                             <MenuIcon />
@@ -313,9 +292,9 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     </IconButton>
                                 </Box>
 
-                                {/* LIENS MOBILE */}
                                 <Link href="/" passHref>
                                     <MenuItem
+                                        onClick={handleNavLinkClick}
                                         sx={{
                                             fontWeight: 600,
                                             fontFamily: 'Poppins',
@@ -324,7 +303,6 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                             backgroundColor: 'transparent',
                                             '&:hover': {
                                                 color: 'text.primary',
-
                                             },
                                         }}
                                     >
@@ -337,6 +315,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     return (
                                         <Link key={link.label} href={link.href} passHref>
                                             <MenuItem
+                                                onClick={handleNavLinkClick}
                                                 sx={{
                                                     fontWeight: 600,
                                                     fontFamily: 'Poppins',
@@ -359,13 +338,12 @@ export default function Navbar({ themeMode, setThemeMode }) {
 
                                 <Divider sx={{ my: 3 }} />
 
-                                <MenuItem>
+                                <MenuItem onClick={handleNavLinkClick}>
                                     <IconButton onClick={toggleTheme} color="inherit">
                                         {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
                                     </IconButton>
                                 </MenuItem>
 
-                                {/* ✅ Conditionnement des boutons dans le menu mobile */}
                                 {loading ? (
                                     <MenuItem sx={{ justifyContent: 'center' }}>
                                         <CircularProgress size={24} color="primary" />
@@ -374,13 +352,13 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     isAuthenticated ? (
                                         <>
                                             <Link href={accountPath} passHref>
-                                                <MenuItem>
+                                                <MenuItem onClick={handleNavLinkClick}>
                                                     <Button color="primary" variant="contained" fullWidth>
                                                         Mon Compte
                                                     </Button>
                                                 </MenuItem>
                                             </Link>
-                                            <MenuItem onClick={logout}> {/* Utilise onClick sur MenuItem pour la déconnexion */}
+                                            <MenuItem onClick={() => { logout(); handleNavLinkClick(); }}>
                                                 <Button color="secondary" variant="outlined" fullWidth>
                                                     Déconnexion
                                                 </Button>
@@ -389,14 +367,14 @@ export default function Navbar({ themeMode, setThemeMode }) {
                                     ) : (
                                         <>
                                             <Link href="/inscription" passHref>
-                                                <MenuItem>
+                                                <MenuItem onClick={handleNavLinkClick}>
                                                     <Button color="primary" variant="contained" fullWidth>
                                                         S&apos;inscrire
                                                     </Button>
                                                 </MenuItem>
                                             </Link>
                                             <Link href="/connexion" passHref>
-                                                <MenuItem>
+                                                <MenuItem onClick={handleNavLinkClick}>
                                                     <Button color="primary" variant="outlined" fullWidth>
                                                         Se connecter
                                                     </Button>

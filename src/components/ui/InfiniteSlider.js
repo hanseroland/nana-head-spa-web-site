@@ -57,7 +57,7 @@ const InfiniteSlider = () => {
 
 
   // Déterminez la source des images : BDD ou statique
-  const imagesToDisplay = galleryImages.length > 2 ? galleryImages : staticImages;
+  const imagesToDisplay = galleryImages.length > 0 ? galleryImages : staticImages;
 
   // Duplique les images pour l'effet infini.
   // On duplique imagesToDisplay, pas seulement staticImages.
@@ -82,6 +82,10 @@ const InfiniteSlider = () => {
     startIndex,
     startIndex + visibleItems
   );
+
+  if (imagesToDisplay.length === 0) {
+    return null;
+  }
 
   return (
     <Box sx={{
@@ -211,8 +215,8 @@ const InfiniteSlider = () => {
                 <Box
                   sx={{
                     position: 'relative',
-                    width: '100%',
-                    height: '100%',
+                    width: { xs: '250px', md: '350px' },
+                    height: { xs: '250px', md: '350px' },
                     borderRadius: 2,
                     overflow: 'hidden',
                     boxShadow: theme.shadows[2],
@@ -233,33 +237,7 @@ const InfiniteSlider = () => {
                     }}
                   />
 
-                  {/* Overlay texte */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      p: 2,
-                      background: theme.palette.mode === 'dark'
-                        ? 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)'
-                        : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)'
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      color="white"
-                      sx={{
-                        fontWeight: 500,
-                        textAlign: 'center',
-                        textShadow: theme.palette.mode === 'dark'
-                          ? '0 1px 3px rgba(0,0,0,0.8)'
-                          : '0 1px 2px rgba(0,0,0,0.8)'
-                      }}
-                    >
-                      {image.label}
-                    </Typography>
-                  </Box>
+
                 </Box>
               </Box>
             ))}

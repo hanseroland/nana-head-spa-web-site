@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import {
     Box,
@@ -40,8 +42,23 @@ const NewRegistrationsChartCard = () => {
     }, []);
 
     return (
-        <Box sx={{ p: { xs: 2, sm: 3 }, height: '100%' }}>
-            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+        <Box
+            sx={{
+                p: { xs: 2, sm: 3 },
+                height: '100%',
+                width: { xs: '50%', sm: '100%' },
+                display: 'flex',
+                flexDirection: 'column',
+                ml: { xs: 4, sm: 2 },
+            }}
+        >
+            <Typography variant="h5" component="h2" gutterBottom
+                sx={{
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                    fontSize: { xs: '15px', sm: '2rem' },
+                }}
+            >
                 Nouvelles Inscriptions (7 Jours)
             </Typography>
             <Divider sx={{ mb: 2 }} />

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     Typography,
@@ -11,6 +13,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    useMediaQuery,
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { GetMonthlyAppointmentTrend } from '@/apiCalls/appointments'; // Importe l'appel API
@@ -19,13 +22,21 @@ import { GetAllFormulas } from '@/apiCalls/formulas'; // Si tu veux filtrer par 
 
 
 const AppointmentTrendChartCard = () => {
+
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs')); // Détecte si l'écran est petit (mobile)
+
+
     const [chartData, setChartData] = useState({ dates: [], counts: [] });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filterStatus, setFilterStatus] = useState(''); // Pour le filtre par statut
     const [filterFormula, setFilterFormula] = useState(''); // Pour le filtre par formule
     const [formulas, setFormulas] = useState([]); // Pour la liste des formules
+
+
+    const chartContainerRef = useRef(null);
+    const [chartWidth, setChartWidth] = useState(600);
 
     useEffect(() => {
         const fetchFormulas = async () => {
@@ -67,11 +78,50 @@ const AppointmentTrendChartCard = () => {
             }
         };
         fetchData();
-    }, [filterStatus, filterFormula]); // Re-fetch quand les filtres changent
+    }, [filterStatus, filterFormula]);
+
+
+    useEffect(() => {
+        const updateChartWidth = () => {
+            if (chartContainerRef.current) {
+                setChartWidth(chartContainerRef.current.clientWidth - (isMobile ? 400 : 400));
+            }
+        };
+
+        updateChartWidth();
+
+
+        window.addEventListener('resize', updateChartWidth);
+
+
+        return () => window.removeEventListener('resize', updateChartWidth);
+    }, [isMobile]);
+
+
+    const xAxisFormatter = (date) => date.toLocaleDateString('fr-FR', {
+        month: 'short',
+        year: isMobile ? undefined : 'numeric'
+    });
 
     return (
-        <Paper elevation={3} sx={{ p: { xs: 2, sm: 3 }, borderRadius: '16px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+        <Paper elevation={3}
+            sx={{
+                p: { xs: 1, sm: 2 },
+                borderRadius: '16px',
+                height: '100%',
+                width: { xs: '50%', sm: '100%' },
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+            <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                sx={{
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                    fontSize: { xs: '15px', sm: '2rem' },
+                }}>
                 Progression des Rendez-vous (3 Mois)
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -124,16 +174,27 @@ const AppointmentTrendChartCard = () => {
                         xAxis={[{
                             data: chartData.dates,
                             scaleType: 'time',
-                            valueFormatter: (date) => date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }),
+                            valueFormatter: xAxisFormatter, // Utilisation du formateur conditionnel
+                            tickLabelStyle: {
+                                fontSize: isMobile ? 10 : 12, // Taille de police réduite sur mobile
+                                angle: isMobile ? -45 : 0, // Incliner les étiquettes sur mobile
+                                textAnchor: isMobile ? 'end' : 'middle', // Ancrage pour l'inclinaison
+                            },
                         }]}
                         series={[{
                             data: chartData.counts,
                             label: 'Nombre de rendez-vous',
-                            color: theme.palette.primary.main // Couleur principale du thème
+                            color: theme.palette.primary.main
                         }]}
-                        width={600} // Ajustez selon la largeur du conteneur ou utilisez flex pour responsive
-                        height={300}
-                        margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                        // Utilisez la largeur dynamique du state
+                        width={chartWidth}
+                        height={isMobile ? 250 : 300} // Hauteur ajustée pour mobile
+                        margin={{
+                            top: isMobile ? 20 : 40,
+                            right: isMobile ? 10 : 20,
+                            bottom: isMobile ? 60 : 80, // Plus de marge pour les libellés inclinés
+                            left: isMobile ? 40 : 60,
+                        }}
                         sx={{
                             '& .MuiChartsAxis-line': { stroke: theme.palette.text.secondary },
                             '& .MuiChartsAxis-tickLabel': { fill: theme.palette.text.secondary },

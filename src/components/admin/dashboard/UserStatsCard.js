@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import {
     Box,
@@ -39,8 +41,27 @@ const UserStatsCard = () => {
     }, []);
 
     return (
-        <Paper elevation={3} sx={{ p: { xs: 2, sm: 3 }, borderRadius: '16px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+        <Paper elevation={2}
+            sx={{
+                p: { xs: 1, sm: 2 },
+                borderRadius: '16px',
+                height: '100%',
+                width: { xs: '50%', sm: '100%' },
+                display: 'flex',
+                flexDirection: 'column',
+
+            }}
+        >
+            <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                sx={{
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                    fontSize: { xs: '15px', sm: '2rem' },
+                }}
+            >
                 Statistiques Utilisateurs
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -54,26 +75,36 @@ const UserStatsCard = () => {
             ) : stats ? (
                 <Stack spacing={1.5}>
                     <Typography variant="body1">
-                        <Typography component="span" variant="h6" color="primary.main" sx={{ fontWeight: 700 }}>
+                        <Typography component="span" variant="h6" color="primary.main" sx={{ fontSize: { xs: '10px', sm: '13px' }, fontWeight: 700 }}>
                             {stats.totalUsers}
                         </Typography> {' '}
                         utilisateurs au total
                     </Typography>
                     <Typography variant="body1">
-                        <Typography component="span" variant="h6" color="success.main" sx={{ fontWeight: 700 }}>
+                        <Typography component="span" variant="h6" color="success.main" sx={{ fontSize: { xs: '10px', sm: '13px' }, fontWeight: 700 }}>
                             {stats.totalClients}
                         </Typography> {' '}
                         clients
                     </Typography>
                     <Typography variant="body1">
-                        <Typography component="span" variant="h6" color="secondary.main" sx={{ fontWeight: 700 }}>
+                        <Typography component="span" variant="h6" color="secondary.main" sx={{ fontSize: { xs: '10px', sm: '13px' }, fontWeight: 700 }}>
                             {stats.totalAdmins}
                         </Typography> {' '}
                         administrateurs
                     </Typography>
                 </Stack>
             ) : (
-                <Alert severity="info">Aucune donnée utilisateur disponible.</Alert>
+                <Alert severity="info"
+                    sx={{
+                        textAlign: 'center',
+                        mt: 2,
+                        fontSize: { xs: '10px', sm: '15px' },
+                        width: { xs: '50%', sm: '100%' },
+                    }}
+
+                >
+                    Aucune donnée utilisateur disponible.
+                </Alert>
             )}
         </Paper>
     );

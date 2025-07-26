@@ -3,7 +3,6 @@ import {
     Box,
     Typography,
     Grid,
-    Paper,
     useTheme,
     Divider,
     CircularProgress,
@@ -65,8 +64,13 @@ const Dashboard = () => {
     }
 
     return (
-        <Box sx={{ p: { xs: 2, sm: 4 }, flexGrow: 1, backgroundColor: theme.palette.background.default }}>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+        <Box sx={{ p: { xs: 1, sm: 4 }, flexGrow: 1, backgroundColor: theme.palette.background.default }}>
+            <Typography variant="h4" component="h1" gutterBottom
+                sx={{
+                    fontWeight: 700,
+                    color: theme.palette.primary.main,
+                    fontSize: { xs: '20px', sm: '2rem' },
+                }}>
                 Tableau de Bord Administrateur
             </Typography>
 
@@ -85,7 +89,8 @@ const Dashboard = () => {
                     <MenuShortcut userRole={currentUser?.role} />
                 </Grid>
 
-                <Grid mt={2} container size={{ xs: 12, md: 12 }} spacing={{ xs: 2, md: 3 }}>
+                <Grid mt={2} container size={{ xs: 12, md: 12 }} spacing={{ xs: 1, md: 2 }}>
+
                     <Grid size={{ xs: 12, md: 6 }} >
                         <NewRegistrationsChartCard />
                     </Grid>

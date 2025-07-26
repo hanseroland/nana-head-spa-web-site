@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button, Container, Typography } from "@mui/material"; // CircularProgress removed
 import { Skeleton } from "@mui/material"; // Skeleton imported
@@ -78,17 +80,7 @@ export default function Hero() {
     }
   }, [loadingApi, bannerVideoUrl, videoLoaded]);
 
-  const bubbleVariants = {
-    animate: {
-      y: [0, -50, 0],
-      opacity: [0.6, 0.8, 0.6],
-      transition: {
-        duration: 6,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
+
 
   const showVideoContent = !loadingApi && videoLoaded && bannerVideoUrl;
   const showNoVideoMessage = !loadingApi && videoLoaded && !bannerVideoUrl;
@@ -177,7 +169,7 @@ export default function Hero() {
               fontFamily: "Poppins",
               color: "background.default",
               mb: 2,
-              fontSize: { xs: "2.5rem", sm: "3rem", md: "4rem", lg: "4.5rem" },
+              fontSize: { xs: "1.5rem", sm: "3rem", md: "4rem", lg: "4.5rem" },
               textShadow: '1px 1px 3px rgba(0, 0, 0, 0.62)',
             }}
           >
@@ -197,7 +189,7 @@ export default function Hero() {
           <Box
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", md: "row" },
+              flexDirection: { xs: "row", md: "row" },
               gap: 2,
               mt: 4,
             }}
@@ -214,7 +206,8 @@ export default function Hero() {
                 fontFamily: "Poppins",
                 textTransform: "none",
                 boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-                fontSize: { xs: "1rem", md: "1.1rem" },
+                fontSize: { xs: "12px", md: "1rem" },
+                width: { xs: "190px", md: "auto" },
               }}
               component={motion.a}
               whileHover={{ scale: 1.1 }}
@@ -235,7 +228,8 @@ export default function Hero() {
                 fontFamily: "Poppins",
                 textTransform: "none",
                 boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-                fontSize: { xs: "1rem", md: "1.1rem" },
+                fontSize: { xs: "12px", md: "1rem" },
+                width: { xs: "190px", md: "auto" },
               }}
               component={motion.a}
               whileHover={{ scale: 1.1 }}
@@ -259,16 +253,15 @@ export default function Hero() {
             position: "relative",
             borderRadius: "1rem",
             overflow: "hidden",
-            boxShadow: (theme) => theme.shadows[4],
+
           }}
         >
           <Box
             sx={{
-              width: { md: "400px", lg: "530px" },
-              height: { md: "420px", lg: "550px" },
+              width: { sx: "500px", md: "400px", lg: "530px" },
+              height: { sx: "420px", md: "420px", lg: "550px" },
               borderRadius: "50%",
               overflow: "hidden",
-              boxShadow: (theme) => theme.shadows[4],
               position: "relative",
               mt: 2,
               mx: "auto",
@@ -281,7 +274,7 @@ export default function Hero() {
                 height="100%"
                 animation="wave"
                 sx={{
-                  backgroundColor: theme.palette.grey[400],
+                  backgroundColor: theme.palette.primary.main,
                   transform: "scale(1.1) rotate(-10deg)",
                   transformOrigin: "center",
                 }}

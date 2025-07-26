@@ -1,3 +1,6 @@
+'use client';
+
+
 import React, { useEffect, useState } from 'react'; // Importez useEffect et useState
 import { Card, CardContent, useTheme, Typography, Box, Chip, List, ListItem, ListItemText, Divider, CircularProgress } from '@mui/material'; // Importez CircularProgress
 import { motion } from 'framer-motion';

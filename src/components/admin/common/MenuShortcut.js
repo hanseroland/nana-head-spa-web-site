@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Box, Typography, Paper, Button, Divider, useTheme } from '@mui/material';
 import { useRouter } from 'next/router'; // Ou 'react-router-dom' si tu ne utilises pas Next.js
@@ -34,18 +36,14 @@ const MenuShortcut = ({ userRole = 'client' }) => { // userRole par défaut à '
 
     return (
         <Paper
-            elevation={4} // Élévation pour un effet de profondeur prononcé comme les widgets Apple
+            elevation={4}
             sx={{
-                p: { xs: 2, sm: 3 },
-                borderRadius: '20px', // Bords très arrondis
-                backgroundColor: theme.palette.background.paper, // Utilise le fond paper du thème
-                width: '100%',
-                maxWidth: '400px', // Largeur fixe pour le menu pour le rendre compact
-                mx: 'auto', // Centrage horizontal
+                p: { xs: 1, sm: 2 },
+                borderRadius: '16px',
+                height: '100%',
+                width: { xs: '50%', sm: '100%' },
                 display: 'flex',
                 flexDirection: 'column',
-                gap: { xs: 1.5, sm: 2 }, // Espacement entre les éléments
-                boxShadow: `0px 8px 20px rgba(0, 0, 0, ${theme.palette.mode === 'dark' ? 0.3 : 0.1})`, // Ombre plus prononcée
             }}
         >
             <Typography
@@ -54,41 +52,42 @@ const MenuShortcut = ({ userRole = 'client' }) => { // userRole par défaut à '
                 gutterBottom
                 sx={{
                     fontWeight: 700,
-                    textAlign: 'center',
+                    textAlign: 'flex-start',
                     color: theme.palette.primary.main,
+                    fontSize: { xs: '15px', sm: '2rem' },
                     mb: { xs: 2, sm: 3 },
                 }}
             >
                 {menuTitle}
             </Typography>
 
-            <Divider sx={{ mb: { xs: 1.5, sm: 2 }, borderColor: theme.palette.divider }} />
+            <Divider sx={{ mb: { xs: 1, sm: 2 }, borderColor: theme.palette.divider }} />
 
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 1.5, // Espacement entre les boutons de navigation
+                    gap: 1, // Espacement entre les boutons de navigation
                 }}
             >
                 {navigationOptions.map((item) => (
                     <Button
                         key={item.name}
                         variant="contained"
-                        fullWidth // Le bouton prend toute la largeur disponible
+                        fullWidth
                         onClick={() => handleNavigation(item.path)}
                         sx={{
-                            justifyContent: 'flex-start', // Alignement du texte à gauche
-                            py: { xs: 1.2, sm: 1.5 }, // Padding vertical
-                            borderRadius: '12px', // Bords légèrement arrondis
-                            backgroundColor: theme.palette.action.selected, // Couleur de fond neutre pour les boutons du menu
-                            color: theme.palette.text.primary, // Texte de couleur primaire
+                            justifyContent: 'flex-start',
+                            py: { xs: 1.2, sm: 1.5 },
+                            borderRadius: '12px',
+                            backgroundColor: theme.palette.action.selected,
+                            color: theme.palette.text.primary,
                             '&:hover': {
-                                backgroundColor: theme.palette.action.hover, // Changement de couleur au survol
+                                backgroundColor: theme.palette.action.hover,
                             },
-                            boxShadow: 'none', // Pas d'ombre sur les boutons eux-mêmes pour un look plus plat
-                            textTransform: 'none', // Pas de majuscules
-                            fontSize: { xs: '0.95rem', sm: '1rem' },
+                            boxShadow: 'none',
+                            textTransform: 'none',
+                            fontSize: { xs: '10px', sm: '15px' },
                             fontWeight: 500,
                         }}
                     >

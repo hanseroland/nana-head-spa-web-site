@@ -1,6 +1,6 @@
 // client/components/Layouts/AdminLayout.js
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import ContactPageIcon from '@mui/icons-material/ContactPage';

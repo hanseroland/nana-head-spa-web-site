@@ -2,10 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, Grid, useTheme, Skeleton } from "@mui/material";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import globalVariables from '@/config/globalVariables';
 import { GetAllPageBanners } from '@/apiCalls/banners';
 
-const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
 
 const PAGE_NAME_KEY = "qui-suis-je"; // The specific page name key

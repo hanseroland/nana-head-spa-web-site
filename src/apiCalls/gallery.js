@@ -2,7 +2,7 @@
 
 import { axiosInstance } from '.'; // Assurez-vous que ce chemin est correct
 
-/**
+/** 
  * @function GetAllGalleryImages
  * @description Récupère toutes les images de la galerie.
  * @returns {Promise<{success: boolean, data?: Array<object>, message?: string}>}

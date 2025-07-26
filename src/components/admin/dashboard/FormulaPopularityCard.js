@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import {
     Box,
@@ -42,8 +43,26 @@ const FormulaPopularityCard = () => {
     }, []);
 
     return (
-        <Paper elevation={3} sx={{ p: { xs: 2, sm: 3 }, borderRadius: '16px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+        <Paper
+            elevation={3}
+            sx={{
+                p: { xs: 1, sm: 2 },
+                borderRadius: '16px',
+                height: '100%',
+                width: { xs: '50%', sm: '100%' },
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+            <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                sx={{
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                    fontSize: { xs: '15px', sm: '2rem' },
+                }}
+            >
                 Popularité des Formules
             </Typography>
             <Divider sx={{ mb: 2 }} />

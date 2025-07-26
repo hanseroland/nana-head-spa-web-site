@@ -77,8 +77,7 @@ export default function OptionsMenu({ logout }) {
                 <Link href="/admin/mesrendezvous" passHref>
                     <MenuItem onClick={handleClose}>Mes rendez-vous</MenuItem>
                 </Link>
-                <MenuItem onClick={handleClose}>Mes soins</MenuItem>
-                <MenuItem onClick={handleClose}>Chat</MenuItem>
+                <MenuItem href="/admin/chat" onClick={handleClose}>Chat</MenuItem>
                 <Divider />
                 <MenuItem
                     onClick={handleLogout}

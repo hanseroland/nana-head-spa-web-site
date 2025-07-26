@@ -88,17 +88,15 @@ const Reservations = () => {
             viewport={{ once: true }}
             mb={6}
           >
-            Réservation dès maintenant votre séance
+            Réserver dès maintenant votre séance
           </MotionTypography>
-
-          <Typography variant="h6" align="center"> Cliquez sur le bouton ci-dessous </Typography>
 
           {/* ✅ Affichage conditionnel du message d'authentification */}
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100px' }}>
               {/* Optionnel: un petit spinner pendant le chargement de l'état d'auth */}
               <CircularProgress size={60} />
-              <Typography>Chargement de l'état d'authentification...</Typography>
+              <Typography>Chargement...</Typography>
             </Box>
           ) : (
             !isAuthenticated && (
@@ -121,8 +119,8 @@ const Reservations = () => {
                     }
                   }}
                 >
-                  <AlertTitle>Action Requise</AlertTitle>
-                  <Typography variant="body1">
+                  <AlertTitle>Important</AlertTitle>
+                  <Typography variant="h6">
                     Veuillez vous <Link href="/connexion" passHref style={{ color: theme.palette.primary.main, fontWeight: 'bold', textDecoration: 'none' }}>connecter</Link> ou vous <Link href="/inscription" passHref style={{ color: theme.palette.primary.main, fontWeight: 'bold', textDecoration: 'none' }}>inscrire</Link> pour réserver.
                   </Typography>
                 </Alert>
@@ -147,7 +145,7 @@ const Reservations = () => {
               component="p"
               sx={{ mb: 2, fontWeight: 500 }}
             >
-              Scannez pour accéder directement à notre page Instagram ✨
+              Scanner pour accéder directement à notre page Instagram ✨
             </Typography>
 
             <Box

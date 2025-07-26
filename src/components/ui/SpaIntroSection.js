@@ -1,3 +1,6 @@
+'use client';
+
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, Button, useTheme, useMediaQuery, Skeleton } from '@mui/material';
 import { motion } from 'framer-motion';

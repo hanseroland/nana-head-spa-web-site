@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import {
     Box,
@@ -41,7 +42,12 @@ const RecentAppointmentsCard = () => {
 
     return (
         <Box sx={{ p: { xs: 2, sm: 3 }, height: '100%' }}>
-            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+            <Typography variant="h5" component="h2" gutterBottom
+                sx={{
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                    fontSize: { xs: '15px', sm: '2rem' },
+                }}>
                 Rendez-vous à Venir
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -66,7 +72,15 @@ const RecentAppointmentsCard = () => {
                         }}>
                             <ListItemText
                                 primary={
-                                    <Typography component="span" variant="body1" sx={{ fontWeight: 500 }}>
+                                    <Typography
+                                        component="span"
+                                        variant="body1"
+                                        sx={{
+                                            fontWeight: 500,
+                                            fontSize: { xs: '10px', sm: '13px' },
+                                        }}
+
+                                    >
                                         {new Date(apt.date).toLocaleDateString('fr-FR')} à {apt.startTime} - {apt.client?.firstName} {apt.client?.lastName}
                                     </Typography>
                                 }
@@ -80,7 +94,17 @@ const RecentAppointmentsCard = () => {
                     ))}
                 </List>
             ) : (
-                <Alert severity="info">Aucun rendez-vous prévu pour les prochains jours.</Alert>
+                <Alert
+                    severity="info"
+                    sx={{
+                        textAlign: 'center',
+                        mt: 2,
+                        fontSize: { xs: '10px', sm: '15px' },
+                        width: { xs: '50%', sm: '100%' },
+                    }}
+                >
+                    Aucun rendez-vous prévu pour les prochains jours.
+                </Alert>
             )}
         </Box>
     );
