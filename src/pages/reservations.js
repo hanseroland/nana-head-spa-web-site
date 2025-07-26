@@ -87,8 +87,9 @@ const Reservations = () => {
             transition={{ duration: 1 }}
             viewport={{ once: true }}
             mb={6}
+            sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' } }}
           >
-            Réserver dès maintenant votre séance
+            Réservez dès maintenant votre séance
           </MotionTypography>
 
           {/* ✅ Affichage conditionnel du message d'authentification */}
@@ -145,7 +146,7 @@ const Reservations = () => {
               component="p"
               sx={{ mb: 2, fontWeight: 500 }}
             >
-              Scanner pour accéder directement à notre page Instagram ✨
+              Scannez pour accéder directement à notre page Instagram ✨
             </Typography>
 
             <Box

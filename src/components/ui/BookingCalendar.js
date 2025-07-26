@@ -61,6 +61,10 @@ const BookingCalendar = ({ onDateClick }) => { // 👈 Récupère la prop onDate
         locale={frLocale}
         dayCellDidMount={handleDayCellDidMount} // ✅ Appliquer le style au jour
         selectAllow={selectAllow} // ✅
+        height="auto" // Permet au calendrier de s'étendre pour afficher tout le contenu
+        // contentHeight="auto" // Alternative si 'height' ne suffit pas, mais 'height' est généralement préféré pour le layout global
+        expandRows={true} // S'assure que toutes les lignes de semaines prennent l'espace nécessaire
+
       />
     </Box>
   );

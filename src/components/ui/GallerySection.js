@@ -94,7 +94,7 @@ const GallerySection = () => {
           mb: 6,
         }}
       >
-        Rassurez-vous par l’image : découvrez notre univers doux et relaxant.
+        Découvrez notre univers doux et relaxant.
       </Typography>
 
       <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>

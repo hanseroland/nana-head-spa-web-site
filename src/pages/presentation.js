@@ -25,7 +25,7 @@ export default function Presentation() {
             <ReusableHero
                 image=""
                 title="Présentation de NANA HEAD SPA"
-                subtitle="Découvrez ma univers de bien-être et de détente, où chaque détail est pensé pour vous offrir une expérience inoubliable."
+                subtitle="Découvrez mon univers de bien-être et de détente, où chaque détail est pensé pour vous offrir une expérience inoubliable."
                 pageName="presentation"
             />
 

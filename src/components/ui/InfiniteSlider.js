@@ -115,7 +115,7 @@ const InfiniteSlider = () => {
           mb: 6,
         }}
       >
-        Rassurez-vous par l’image : découvrez notre univers doux et relaxant.
+        Découvrez notre univers doux et relaxant.
       </Typography>
 
       {loading && (
@@ -130,7 +130,7 @@ const InfiniteSlider = () => {
           <Typography color="error" textAlign="center">
             {error}
             <br />
-            Affichage de la galerie par défaut.
+
           </Typography>
         </Box>
       )}
