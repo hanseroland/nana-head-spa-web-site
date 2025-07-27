@@ -185,15 +185,15 @@ export default function Footer() {
                     }}
                 >
                     <div>
-                        <Link color="text.secondary" variant="body2" href="#">
+                        <Link color="text.secondary" variant="body2" href="/politique-de-confidentialite">
                             Politique de confidentialité
                         </Link>
                         <Typography sx={{ display: 'inline', mx: 0.5, opacity: 0.5 }}>
                             &nbsp;•&nbsp;
                         </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
+                        {/* <Link color="text.secondary" variant="body2" href="#">
                             Conditions d&apos;utilisation
-                        </Link>
+                        </Link>*/}
                         <Copyright />
                     </div>
                     <Stack

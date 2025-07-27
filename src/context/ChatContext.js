@@ -1,4 +1,3 @@
-// src/context/ChatContext.js
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { toast } from 'react-hot-toast';
@@ -8,7 +7,7 @@ import {
     StartClientAdminConversation,
     StartAdminClientConversation,
     SendMessage,
-    GetClients
+    // GetClients // Si GetClients n'est pas utilisé directement dans ce contexte, on peut l'omettre.
 } from '@/apiCalls/chat';
 import { useAuth } from './AuthContext';
 
@@ -26,6 +25,18 @@ export const ChatProvider = ({ children }) => {
     const [isChatLoading, setIsChatLoading] = useState(false);
     const [chatError, setChatError] = useState(null);
     const socket = useRef(null);
+
+    // Stocke une référence aux messages actuels pour éviter les problèmes de clôture (closure) dans les callbacks de socket
+    const messagesRef = useRef(messages);
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
+
+    // Stocke une référence à la conversation sélectionnée
+    const selectedConversationRef = useRef(selectedConversation);
+    useEffect(() => {
+        selectedConversationRef.current = selectedConversation;
+    }, [selectedConversation]);
 
     // --- Déclarations des fonctions de chargement des données via API REST (déplacées en haut) ---
 
@@ -48,7 +59,7 @@ export const ChatProvider = ({ children }) => {
         } finally {
             setIsChatLoading(false);
         }
-    }, [isAuthenticated, authLoading]); // Ces dépendances sont stables ou contrôlées
+    }, [isAuthenticated, authLoading]);
 
     const fetchMessages = useCallback(async (conversationId) => {
         if (!conversationId) return;
@@ -58,6 +69,7 @@ export const ChatProvider = ({ children }) => {
             const response = await GetConversationMessages(conversationId);
             if (response.success) {
                 setMessages(response.data);
+                // Réinitialise le compteur de messages non lus pour la conversation sélectionnée
                 setConversations(prev => prev.map(conv =>
                     conv._id === conversationId ? { ...conv, unreadCount: 0 } : conv
                 ));
@@ -72,17 +84,17 @@ export const ChatProvider = ({ children }) => {
         } finally {
             setIsChatLoading(false);
         }
-    }, []); // Pas de dépendances changeantes ici, donc stable
+    }, []);
 
     const selectConversation = useCallback(async (conversation) => {
         setSelectedConversation(conversation);
         if (conversation) {
-            setMessages([]);
+            setMessages([]); // Nettoie les messages avant de charger les nouveaux
             await fetchMessages(conversation._id);
         } else {
             setMessages([]);
         }
-    }, [fetchMessages]); // Dépend de fetchMessages
+    }, [fetchMessages]);
 
     const startClientAdminConversation = useCallback(async () => {
         if (!isAuthenticated || currentUser?.role !== 'client') {
@@ -121,7 +133,7 @@ export const ChatProvider = ({ children }) => {
         } finally {
             setIsChatLoading(false);
         }
-    }, [isAuthenticated, currentUser, fetchMessages, fetchConversations, selectConversation]); // Ajout de fetchConversations et selectConversation si utilisées
+    }, [isAuthenticated, currentUser, fetchMessages]);
 
     const startAdminClientConversation = useCallback(async (clientId) => {
         if (!isAuthenticated || currentUser?.role !== 'admin') {
@@ -160,9 +172,9 @@ export const ChatProvider = ({ children }) => {
         } finally {
             setIsChatLoading(false);
         }
-    }, [isAuthenticated, currentUser, fetchMessages, fetchConversations, selectConversation]); // Ajout de fetchConversations et selectConversation si utilisées
+    }, [isAuthenticated, currentUser, fetchMessages]);
 
-    // Fonction pour envoyer un message (mise à jour optimiste + API REST)
+    // Fonction pour envoyer un message (mise à jour optimiste + API REST + Socket.IO)
     const sendMessage = useCallback(async (receiverId, content) => {
         if (!socket.current || !selectedConversation || !currentUser) {
             toast.error("Chat non initialisé ou conversation non sélectionnée.");
@@ -182,9 +194,10 @@ export const ChatProvider = ({ children }) => {
             content: content,
             timestamp: new Date().toISOString(),
             readBy: [currentUser._id],
-            isOptimistic: true
+            isOptimistic: true // Marque le message comme optimiste
         };
 
+        // Ajoute le message optimiste à la liste des messages
         setMessages(prevMessages => [...prevMessages, optimisticMessage]);
 
         const messageDataForApi = {
@@ -194,6 +207,7 @@ export const ChatProvider = ({ children }) => {
         };
 
         try {
+            // Envoi via Socket.IO pour une diffusion immédiate
             if (socket.current && socket.current.connected) {
                 socket.current.emit('send_message', {
                     conversationId: selectedConversation._id,
@@ -201,24 +215,59 @@ export const ChatProvider = ({ children }) => {
                     content: content,
                     receiver: receiverId
                 });
+            } else {
+                console.warn("Socket.IO n'est pas connecté, le message ne sera pas diffusé en temps réel.");
+                // Optionnel: Gérer ici le cas où Socket.IO n'est pas connecté (par exemple, mise en file d'attente)
             }
+
+            // Envoi via API REST pour persistance et confirmation
             const response = await SendMessage(messageDataForApi);
             if (response.success) {
-                const sentMessage = response.data;
+                const sentMessage = response.data; // Le message complet et persisté
+
+                setMessages(prevMessages => {
+                    // Trouver et remplacer le message optimiste par le message réel
+                    const updatedMessages = prevMessages.map(msg =>
+                        msg._id === tempId ? { ...sentMessage, isOptimistic: false } : msg
+                    );
+                    // Si pour une raison quelconque le message optimiste n'a pas été trouvé, ajoute le message réel
+                    if (!updatedMessages.some(msg => msg._id === sentMessage._id)) {
+                        updatedMessages.push({ ...sentMessage, isOptimistic: false });
+                    }
+                    return updatedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Assure l'ordre chronologique
+                });
+
+                // Mettre à jour la conversation dans la liste pour qu'elle remonte en haut
+                setConversations(prevConversations => {
+                    const updatedConversations = prevConversations.map(conv => {
+                        if (conv._id === selectedConversation._id) {
+                            return { ...conv, lastMessage: sentMessage, updatedAt: new Date(sentMessage.timestamp) };
+                        }
+                        return conv;
+                    });
+                    // Si la conversation n'était pas déjà dans la liste, l'ajouter (peu probable ici si selectedConversation existe)
+                    if (!updatedConversations.some(conv => conv._id === selectedConversation._id)) {
+                        // Cela signifie qu'il faut re-fetch les conversations pour être sûr
+                        fetchConversations();
+                    }
+                    return updatedConversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+                });
 
                 toast.success('Message envoyé !');
             } else {
                 toast.error("Échec de l'envoi du message via API.");
+                // En cas d'échec API, retirer le message optimiste
                 setMessages(prevMessages => prevMessages.filter(msg => msg._id !== tempId));
             }
         } catch (error) {
-            console.error("Erreur API sendMessage:", error);
+            console.error("Erreur lors de l'envoi du message:", error);
             toast.error("Erreur réseau lors de l'envoi du message.");
+            // En cas d'erreur, retirer le message optimiste
             setMessages(prevMessages => prevMessages.filter(msg => msg._id !== tempId));
         }
-    }, [socket, selectedConversation, currentUser]); // Ajouter SendMessage si ce n'est pas une fonction locale mais une importée qui peut changer
+    }, [socket, selectedConversation, currentUser, fetchConversations]); // Ajout de fetchConversations comme dépendance
 
-    // --- Initialisation et gestion du Socket.IO (maintenant après les déclarations de fonctions) ---
+    // --- Initialisation et gestion du Socket.IO ---
     useEffect(() => {
         if (isAuthenticated && currentUser && currentUser._id && !socket.current) {
             socket.current = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
@@ -234,39 +283,55 @@ export const ChatProvider = ({ children }) => {
             socket.current.on('receive_message', (message) => {
                 console.log("Message reçu via Socket:", message);
 
+                // Vérifie si le message existe déjà (optimiste ou réel) avant de l'ajouter
                 setMessages(prevMessages => {
-                    const existingIndex = prevMessages.findIndex(msg =>
-                        (message._id && message._id === msg._id) ||
-                        (msg._id && msg._id.startsWith("temp_") && msg.content === message.content && msg.conversationId === message.conversationId && message.sender._id === currentUser._id)
+                    // Si le message reçu est notre propre message (confirmé par le backend),
+                    // on cherche le message optimiste et on le remplace.
+                    // On peut se baser sur l'ID du message si le backend le renvoie,
+                    // ou sur le contenu et l'expéditeur si l'ID n'est pas fiable pour l'optimistic UI.
+                    const existingMessageIndex = prevMessages.findIndex(msg =>
+                        msg._id === message._id || // Si l'ID réel correspond
+                        (msg.isOptimistic && msg.content === message.content && msg.conversationId === message.conversationId && message.sender._id === currentUser._id)
                     );
 
-                    if (existingIndex > -1) {
+                    if (existingMessageIndex > -1) {
                         const updatedMessages = [...prevMessages];
-                        // Remplacer le message temporaire par le message définitif si c'est le nôtre
-                        if (updatedMessages[existingIndex]._id && updatedMessages[existingIndex]._id.startsWith("temp_")) {
-                            updatedMessages[existingIndex] = message;
-                            return updatedMessages;
-                        }
-                        return prevMessages; // Message déjà présent, c'est un doublon de réception
+                        // Remplacer le message existant (optimiste ou doublon) par le message réel
+                        updatedMessages[existingMessageIndex] = { ...message, isOptimistic: false };
+                        return updatedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                    } else {
+                        // Si ce n'est pas un message que nous avons envoyé (optimiste), ajoutez-le.
+                        // Assurez-vous d'ajouter uniquement si ce n'est pas déjà présent pour éviter les doublons.
+                        return [...prevMessages, { ...message, isOptimistic: false }].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     }
-                    return [...prevMessages, message];
                 });
 
+
+                // Mettre à jour la liste des conversations avec le dernier message et les non lus
                 setConversations(prevConversations => {
                     const updatedConversations = prevConversations.map(conv => {
                         if (conv._id === message.conversationId) {
                             const isSender = message.sender._id === currentUser._id;
+                            // Incrémenter le compteur de non lus si le message n'est pas de nous et que la conversation n'est pas active
                             let unreadCount = conv.unreadCount || 0;
-
-                            if (!isSender && (!selectedConversation || selectedConversation._id !== message.conversationId)) {
+                            if (!isSender && (selectedConversationRef.current?._id !== message.conversationId)) {
                                 unreadCount += 1;
-                            } else if (selectedConversation && selectedConversation._id === message.conversationId) {
+                            } else if (selectedConversationRef.current?._id === message.conversationId) {
+                                // Si la conversation est active et c'est le message de l'autre, on le marque lu
                                 unreadCount = 0;
                             }
                             return { ...conv, lastMessage: message, updatedAt: new Date(message.timestamp), unreadCount: unreadCount };
                         }
                         return conv;
                     });
+
+                    // Si le message reçu concerne une conversation qui n'est pas encore dans la liste (ex: nouvelle conversation initiée par l'autre)
+                    // Il faut re-fetch les conversations pour être sûr.
+                    if (!updatedConversations.some(conv => conv._id === message.conversationId)) {
+                        fetchConversations();
+                        return prevConversations; // Retourne l'état précédent en attendant le re-fetch
+                    }
+
                     return updatedConversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
                 });
             });
@@ -294,7 +359,7 @@ export const ChatProvider = ({ children }) => {
             setSelectedConversation(null);
             setMessages([]);
         }
-    }, [isAuthenticated, currentUser, selectedConversation, setMessages, setConversations]); // selectedConversation est une dépendance cruciale pour l'update des messages non lus, setMessages et setConversations sont nécessaires car utilisés à l'intérieur du useCallback du useEffect principal.
+    }, [isAuthenticated, currentUser, fetchConversations]); // selectedConversation n'est plus une dépendance directe car on utilise selectedConversationRef.current
 
 
     // Effet pour fetchConversations au chargement ou changement d'authentification
@@ -302,7 +367,7 @@ export const ChatProvider = ({ children }) => {
         if (isAuthenticated && !authLoading) {
             fetchConversations();
         }
-    }, [isAuthenticated, authLoading, fetchConversations]); // fetchConversations est maintenant défini avant d'être utilisé ici
+    }, [isAuthenticated, authLoading, fetchConversations]);
 
     // --- Valeurs fournies par le contexte ---
     const contextValue = {
@@ -317,7 +382,7 @@ export const ChatProvider = ({ children }) => {
         sendMessage,
         startClientAdminConversation,
         startAdminClientConversation,
-        setMessages,
+        setMessages, // Gardez cette fonction si elle est utilisée ailleurs pour des manipulations directes
     };
 
     return (

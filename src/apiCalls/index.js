@@ -24,7 +24,8 @@ export const axiosInstance = async (method, url, payload) => {
             method,
             url: `${API_BASE_URL}/api/v1${url}`,
             data: payload,
-            headers: headers
+            headers: headers,
+
         },
         );
         //console.log(" local storage", localStorage.getItem('token'))

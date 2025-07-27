@@ -17,30 +17,24 @@ const MotionTypography = motion(Typography);
 
 const Reservations = () => {
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // État pour contrôler l'ouverture de la modale
-  const [selectedDate, setSelectedDate] = useState(null); // État pour stocker la date sélectionnée
-  //const { bookings } = useContext(BookingContext); // 👈 Utilise useContext pour accéder à bookings
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
 
-  // ✅ Accède à l'état de l'utilisateur via le Context
-  const { currentUser, isAuthenticated, loading } = useAuth(); // Récupère isAuthenticated et loading
+
+  const { currentUser, isAuthenticated, loading } = useAuth();
   const router = useRouter();
   const theme = useTheme();
 
 
 
-  // Fonction pour ouvrir la modale et stocker la date sélectionnée
   const handleDateClick = (dateStr) => {
-    // ✅ Vérifie si l'utilisateur est authentifié avant d'ouvrir la modale
     if (isAuthenticated) {
       setSelectedDate(dateStr);
       setIsModalOpen(true);
     } else {
-      // Si l'utilisateur n'est pas authentifié, ne pas ouvrir la modale
-      // et potentiellement afficher un message ou rediriger.
-      // Le message visuel est géré dans le JSX ci-dessous.
+
       console.log("Veuillez vous connecter ou vous inscrire pour réserver.");
-      // Optionnel : router.push('/connexion'); pour rediriger automatiquement.
     }
   };
 
@@ -202,12 +196,6 @@ const Reservations = () => {
   );
 };
 
-// 👇 Emballe la page dans le BookingProvider
-//const Reservations = () => (
-//<BookingProvider>
-//<ReservationPage />
-//</BookingProvider>
-//);
 
 
 
