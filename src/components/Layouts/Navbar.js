@@ -103,7 +103,7 @@ export default function Navbar({ themeMode, setThemeMode }) {
                 mt: 'calc(var(--template-frame-height, 0px) + 8px)',
             }}
         >
-            <Container maxWidth="lg">
+            <Container maxWidth="fluid">
                 <StyledToolbar variant="dense" disableGutters>
                     <Link href="/" passHref>
                         <Box

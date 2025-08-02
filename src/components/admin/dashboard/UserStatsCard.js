@@ -46,7 +46,7 @@ const UserStatsCard = () => {
                 p: { xs: 1, sm: 2 },
                 borderRadius: '16px',
                 height: '100%',
-                width: { xs: '50%', sm: '100%' },
+                width: { xs: '100%', sm: '100%' },
                 display: 'flex',
                 flexDirection: 'column',
 
@@ -73,7 +73,9 @@ const UserStatsCard = () => {
             ) : error ? (
                 <Alert severity="error">{error}</Alert>
             ) : stats ? (
-                <Stack spacing={1.5}>
+                <Stack
+                    spacing={1.5}
+                >
                     <Typography variant="body1">
                         <Typography component="span" variant="h6" color="primary.main" sx={{ fontSize: { xs: '10px', sm: '13px' }, fontWeight: 700 }}>
                             {stats.totalUsers}
