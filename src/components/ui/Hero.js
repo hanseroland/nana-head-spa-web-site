@@ -85,6 +85,12 @@ export default function Hero() {
   const showVideoContent = !loadingApi && videoLoaded && bannerVideoUrl;
   const showNoVideoMessage = !loadingApi && videoLoaded && !bannerVideoUrl;
 
+  // Fonction utilitaire pour générer l'URL optimisée pour WebM
+  const getWebmUrl = (originalUrl) => {
+    if (!originalUrl) return null;
+    return originalUrl.replace('.mp4', '.webm'); // Assumes a WebM version exists with the same name
+  };
+
   return (
     <Box
       component="section"
@@ -346,9 +352,10 @@ export default function Hero() {
                 }}
               />
             ) : showVideoContent ? (
+
               <video
                 key={bannerVideoUrl}
-                src={bannerVideoUrl}
+
                 autoPlay
                 loop
                 muted
@@ -366,7 +373,10 @@ export default function Hero() {
                   setBannerVideoUrl(null); // Clear the problematic URL
                   setErrorBanner("La vidéo ne peut pas être lue.");
                 }}
-              />
+              >
+                <source src={getWebmUrl(bannerVideoUrl)} type="video/webm" />
+                <source src={bannerVideoUrl} type="video/mp4" />
+              </video>
             ) : showNoVideoMessage ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', backgroundColor: theme.palette.grey[300] }}>
                 <Typography variant="caption" color="text.secondary">
