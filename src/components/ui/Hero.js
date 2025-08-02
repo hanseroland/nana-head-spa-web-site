@@ -322,7 +322,7 @@ export default function Hero() {
             display: { xs: "block", md: "none", sm: "block" },
             position: "relative",
             overflow: "hidden",
-            borderRadius: "1rem",
+            borderRadius: "20px",
             width: "100%",
           }}
         >
@@ -342,9 +342,7 @@ export default function Hero() {
                 height="100%"
                 animation="wave"
                 sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  transform: "scale(1.1) rotate(-10deg)",
-                  transformOrigin: "center",
+                  bgcolor: 'rgba(0, 0, 0, 0.1)',
                 }}
               />
             ) : showVideoContent ? (
@@ -359,7 +357,7 @@ export default function Hero() {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  borderRadius: "1rem",
+                  //borderRadius: "1rem",
                   //transform: "scale(1.1) rotate(-10deg)",
                   transformOrigin: "center",
                 }}
