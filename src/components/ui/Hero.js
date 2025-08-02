@@ -253,6 +253,7 @@ export default function Hero() {
             position: "relative",
             borderRadius: "1rem",
             overflow: "hidden",
+
           }}
         >
           <Box
@@ -322,12 +323,13 @@ export default function Hero() {
             position: "relative",
             overflow: "hidden",
             borderRadius: "1rem",
+            width: "100%",
           }}
         >
           <Box
             sx={{
-              width: { sx: "100%", md: "100%", lg: "530px" },
-              height: { sx: "420px", md: "420px", lg: "550px" },
+              width: '100%',
+              height: { xs: "350px", sm: "450px" },
               overflow: "hidden",
               position: "relative",
 
