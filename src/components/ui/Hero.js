@@ -374,7 +374,7 @@ export default function Hero() {
                   setErrorBanner("La vidéo ne peut pas être lue.");
                 }}
               >
-                <source src={getWebmUrl(bannerVideoUrl)} type="video/webm" />
+                <source src="/videos/vocex.webm" type="video/webm" />
                 <source src={bannerVideoUrl} type="video/mp4" />
               </video>
             ) : showNoVideoMessage ? (
