@@ -355,7 +355,6 @@ export default function Hero() {
 
               <video
                 key={bannerVideoUrl}
-
                 autoPlay
                 loop
                 muted
