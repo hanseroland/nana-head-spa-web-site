@@ -213,6 +213,10 @@ const HeroBanner = () => {
                                     width: { xs: "100%", md: "auto" },
                                     backgroundColor: "transparent",
                                     color: theme.palette.primary.main,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.primary.dark,
+                                    },
+
                                 }}
                             >
                                 Découvrez nos formules
@@ -233,6 +237,9 @@ const HeroBanner = () => {
                                     width: { xs: "100%", md: "auto" },
                                     backgroundColor: "transparent",
                                     color: theme.palette.primary.main,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.primary.dark,
+                                    },
                                 }}
                             >
                                 Prendre un rendez-vous
