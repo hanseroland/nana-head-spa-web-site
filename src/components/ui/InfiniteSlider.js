@@ -206,7 +206,7 @@ const InfiniteSlider = () => {
               <Box
                 key={`${image.src}-${index}`} // Clé unique combinant src et index pour éviter les problèmes avec les images dupliquées
                 sx={{
-                  flex: `0 0 ${100 / visibleItems}%`,
+                  flex: `0 0 ${50 / visibleItems}%`,
                   px: 1,
                   position: 'relative',
                   aspectRatio: '4/3' // Maintient le ratio d'aspect pour toutes les images
@@ -215,8 +215,8 @@ const InfiniteSlider = () => {
                 <Box
                   sx={{
                     position: 'relative',
-                    width: { xs: '250px', md: '350px' },
-                    height: { xs: '250px', md: '350px' },
+                    width: { xs: '200px', md: '350px' },
+                    height: { xs: '200px', md: '350px' },
                     borderRadius: 2,
                     overflow: 'hidden',
                     boxShadow: theme.shadows[2],

@@ -15,9 +15,9 @@ export default function Hero() {
   const router = useRouter();
 
   const [bannerVideoUrl, setBannerVideoUrl] = useState(null);
-  const [loadingApi, setLoadingApi] = useState(true); // Renamed from loadingBanner to clarify API call state
+  const [loadingApi, setLoadingApi] = useState(true);
   const [errorBanner, setErrorBanner] = useState(null);
-  const [videoLoaded, setVideoLoaded] = useState(false); // New state to track actual video loading
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const fetchHomeBanner = useCallback(async () => {
     setLoadingApi(true);

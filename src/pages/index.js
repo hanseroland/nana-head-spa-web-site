@@ -7,6 +7,7 @@ import StarFormulasSection from "../components/ui/StarFormulasSection";
 import globalVariables from "@/config/globalVariables";
 import InfiniteSlider from "@/components/ui/InfiniteSlider";
 import TestimonialsSection from "@/components/ui/TestimonialsSection";
+import HeroBanner from "@/components/ui/HeroBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,8 @@ export default function Home() {
       <div
 
       >
-        <Hero />
+        {/*<Hero />*/}
+        <HeroBanner />
         <main className={styles.main}>
           <SpaIntroSection />
           <StarFormulasSection />
