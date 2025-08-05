@@ -198,11 +198,11 @@ const HeroBanner = () => {
                             justifyContent={{ xs: 'center', md: 'flex-start' }}
                         >
                             <Button
-                                variant="contained"
-
+                                variant="outlined"
                                 size="large"
                                 sx={{
                                     borderRadius: "2rem",
+                                    border: `2px solid ${theme.palette.primary.main}`,
                                     px: 4,
                                     py: 1.5,
                                     fontWeight: "bold",
@@ -210,7 +210,9 @@ const HeroBanner = () => {
                                     textTransform: "none",
                                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
                                     fontSize: { xs: "12px", md: "1rem" },
-                                    width: { xs: "190px", md: "auto" },
+                                    width: { xs: "100%", md: "auto" },
+                                    backgroundColor: "transparent",
+                                    color: theme.palette.primary.main,
                                 }}
                             >
                                 Découvrez nos formules
@@ -228,7 +230,9 @@ const HeroBanner = () => {
                                     textTransform: "none",
                                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
                                     fontSize: { xs: "12px", md: "1rem" },
-                                    width: { xs: "190px", md: "auto" },
+                                    width: { xs: "100%", md: "auto" },
+                                    backgroundColor: "transparent",
+                                    color: theme.palette.primary.main,
                                 }}
                             >
                                 Prendre un rendez-vous

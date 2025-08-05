@@ -267,6 +267,9 @@ export default function Navbar({ themeMode, setThemeMode }) {
                     </Box>
 
                     <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
+                        <IconButton onClick={toggleTheme} color="inherit">
+                            {themeMode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
+                        </IconButton>
                         <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
                             <MenuIcon />
                         </IconButton>
@@ -281,12 +284,14 @@ export default function Navbar({ themeMode, setThemeMode }) {
                             }}
                         >
                             <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'flex-end',
                                     }}
                                 >
+
                                     <IconButton onClick={toggleDrawer(false)}>
                                         <CloseRoundedIcon />
                                     </IconButton>
