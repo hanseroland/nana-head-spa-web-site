@@ -8,7 +8,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from 'next/router';
 import SubmitButton from "../common/SubmitButton";
 import { LoginUser } from "@/apiCalls/auth";
-import { GetCurrentUser } from "@/apiCalls/users";
 // ✅ Import du hook useAuth
 import { useAuth } from '@/context/AuthContext';
 
@@ -36,14 +35,12 @@ const SignIn = () => {
         try {
 
             // Utilisez la fonction simulée ou la fonction réelle de l'API
-            const response = await LoginUser(values); // REMPLACEZ PAR LoginUser(values) LORSQUE LE BACKEND EST PRÊT
+            const response = await LoginUser(values);
 
-            if (response.success && response.token && response.data) {
+            if (response.success && response.data) {
 
-                // ✅ Appelle la fonction login du contexte avec les données et le token
-                await login(response.data, response.token);
+                await login(response.data);
 
-                // Redirection après connexion réussie
                 const redirectPath = router.query.redirect || (response.data.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte');
                 router.push(redirectPath);
 

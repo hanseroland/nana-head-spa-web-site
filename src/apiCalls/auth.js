@@ -11,3 +11,9 @@ export const LoginUser = async (loginData) => {
     const response = await axiosInstance("post", '/auth/login', loginData);
     return response;
 }
+
+// Se déconnecter 
+export const LogoutUser = async (loginData) => {
+    const response = await axiosInstance("post", '/auth/logout');
+    return response;
+}

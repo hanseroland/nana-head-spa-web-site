@@ -175,7 +175,7 @@ export const ChatProvider = ({ children }) => {
     }, [isAuthenticated, currentUser, fetchMessages]);
 
     // Fonction pour envoyer un message (mise à jour optimiste + API REST + Socket.IO)
-    const sendMessage = useCallback(async (receiverId, content) => {
+    const sendMessage = useCallback((receiverId, content) => {
         if (!socket.current || !selectedConversation || !currentUser) {
             toast.error("Chat non initialisé ou conversation non sélectionnée.");
             return;
@@ -191,81 +191,25 @@ export const ChatProvider = ({ children }) => {
                 lastName: currentUser.lastName,
                 role: currentUser.role
             },
-            content: content,
+            content,
             timestamp: new Date().toISOString(),
             readBy: [currentUser._id],
-            isOptimistic: true // Marque le message comme optimiste
+            isOptimistic: true
         };
 
-        // Ajoute le message optimiste à la liste des messages
-        setMessages(prevMessages => [...prevMessages, optimisticMessage]);
+        // Ajout du message optimiste
+        setMessages(prev => [...prev, optimisticMessage]);
 
-        const messageDataForApi = {
+        // Envoi via Socket.IO
+        socket.current.emit('send_message', {
             conversationId: selectedConversation._id,
-            content: content,
-            receiverId: receiverId,
-        };
+            sender: currentUser._id,
+            content,
+            receiver: receiverId
+        });
 
-        try {
-            // Envoi via Socket.IO pour une diffusion immédiate
-            if (socket.current && socket.current.connected) {
-                socket.current.emit('send_message', {
-                    conversationId: selectedConversation._id,
-                    sender: currentUser._id,
-                    content: content,
-                    receiver: receiverId
-                });
-            } else {
-                console.warn("Socket.IO n'est pas connecté, le message ne sera pas diffusé en temps réel.");
-                // Optionnel: Gérer ici le cas où Socket.IO n'est pas connecté (par exemple, mise en file d'attente)
-            }
+    }, [socket, selectedConversation, currentUser]);
 
-            // Envoi via API REST pour persistance et confirmation
-            const response = await SendMessage(messageDataForApi);
-            if (response.success) {
-                const sentMessage = response.data; // Le message complet et persisté
-
-                setMessages(prevMessages => {
-                    // Trouver et remplacer le message optimiste par le message réel
-                    const updatedMessages = prevMessages.map(msg =>
-                        msg._id === tempId ? { ...sentMessage, isOptimistic: false } : msg
-                    );
-                    // Si pour une raison quelconque le message optimiste n'a pas été trouvé, ajoute le message réel
-                    if (!updatedMessages.some(msg => msg._id === sentMessage._id)) {
-                        updatedMessages.push({ ...sentMessage, isOptimistic: false });
-                    }
-                    return updatedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Assure l'ordre chronologique
-                });
-
-                // Mettre à jour la conversation dans la liste pour qu'elle remonte en haut
-                setConversations(prevConversations => {
-                    const updatedConversations = prevConversations.map(conv => {
-                        if (conv._id === selectedConversation._id) {
-                            return { ...conv, lastMessage: sentMessage, updatedAt: new Date(sentMessage.timestamp) };
-                        }
-                        return conv;
-                    });
-                    // Si la conversation n'était pas déjà dans la liste, l'ajouter (peu probable ici si selectedConversation existe)
-                    if (!updatedConversations.some(conv => conv._id === selectedConversation._id)) {
-                        // Cela signifie qu'il faut re-fetch les conversations pour être sûr
-                        fetchConversations();
-                    }
-                    return updatedConversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-                });
-
-                toast.success('Message envoyé !');
-            } else {
-                toast.error("Échec de l'envoi du message via API.");
-                // En cas d'échec API, retirer le message optimiste
-                setMessages(prevMessages => prevMessages.filter(msg => msg._id !== tempId));
-            }
-        } catch (error) {
-            console.error("Erreur lors de l'envoi du message:", error);
-            toast.error("Erreur réseau lors de l'envoi du message.");
-            // En cas d'erreur, retirer le message optimiste
-            setMessages(prevMessages => prevMessages.filter(msg => msg._id !== tempId));
-        }
-    }, [socket, selectedConversation, currentUser, fetchConversations]); // Ajout de fetchConversations comme dépendance
 
     // --- Initialisation et gestion du Socket.IO ---
     useEffect(() => {
@@ -285,10 +229,7 @@ export const ChatProvider = ({ children }) => {
 
                 // Vérifie si le message existe déjà (optimiste ou réel) avant de l'ajouter
                 setMessages(prevMessages => {
-                    // Si le message reçu est notre propre message (confirmé par le backend),
-                    // on cherche le message optimiste et on le remplace.
-                    // On peut se baser sur l'ID du message si le backend le renvoie,
-                    // ou sur le contenu et l'expéditeur si l'ID n'est pas fiable pour l'optimistic UI.
+
                     const existingMessageIndex = prevMessages.findIndex(msg =>
                         msg._id === message._id || // Si l'ID réel correspond
                         (msg.isOptimistic && msg.content === message.content && msg.conversationId === message.conversationId && message.sender._id === currentUser._id)
@@ -300,8 +241,7 @@ export const ChatProvider = ({ children }) => {
                         updatedMessages[existingMessageIndex] = { ...message, isOptimistic: false };
                         return updatedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     } else {
-                        // Si ce n'est pas un message que nous avons envoyé (optimiste), ajoutez-le.
-                        // Assurez-vous d'ajouter uniquement si ce n'est pas déjà présent pour éviter les doublons.
+
                         return [...prevMessages, { ...message, isOptimistic: false }].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     }
                 });
