@@ -221,11 +221,11 @@ export const ChatProvider = ({ children }) => {
             });
 
             socket.current.on('connect', () => {
-                console.log('Socket connecté avec l\'ID :', socket.current.id);
+                //console.log('Socket connecté avec l\'ID :', socket.current.id);
             });
 
             socket.current.on('receive_message', (message) => {
-                console.log("Message reçu via Socket:", message);
+                // console.log("Message reçu via Socket:", message);
 
                 // Vérifie si le message existe déjà (optimiste ou réel) avant de l'ajouter
                 setMessages(prevMessages => {

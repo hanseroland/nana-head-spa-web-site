@@ -124,7 +124,7 @@ const Reservations = () => {
           )}
 
 
-          <BookingCalendar onDateClick={handleDateClick} />{/* 👈 Passe la fonction handleDateClick au calendrier */}
+          {/* <BookingCalendar onDateClick={handleDateClick} />*/}{/* 👈 Passe la fonction handleDateClick au calendrier */}
 
           {/* 👈 Affiche la modale conditionnellement */}
           <BookingModal
