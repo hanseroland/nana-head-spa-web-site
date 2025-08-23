@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { GetCurrentUser } from '@/apiCalls/users';
 import { useRouter } from 'next/router';
-import { LogoutUser } from '@/apiCalls/auth';
+import { LoginUser, LogoutUser } from '@/apiCalls/auth';
 
 export const AuthContext = createContext({
     currentUser: null,
