@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }) => {
             if (response.success && response.data) {
                 setCurrentUser(response.data); // state local
                 setIsAuthenticated(true);      // authentifié
+                console.log("response login", response.data)
+                return response.data; // ✅ Renvoyer les données de l'utilisateur
+
             } else {
                 throw new Error(response.message || "Login échoué");
             }

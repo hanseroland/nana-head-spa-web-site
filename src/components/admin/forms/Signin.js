@@ -61,15 +61,21 @@ const SignIn = () => {
         setLoginError(null);
 
         try {
-            await login(values); // le contexte gère l'appel API + cookie
-            const redirectPath = currentUser?.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte';
-            router.push(redirectPath);
+            const userData = await login(values); // ✅ Attend la réponse de la fonction login
+            if (userData) { // Si la connexion a réussi
+                const redirectPath = userData.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte';
+                router.push(redirectPath);
+            } else {
+                // Gérer le cas où la fonction login ne renvoie pas d'erreur mais ne renvoie pas non plus de données
+                setLoginError("Échec de la connexion.");
+            }
         } catch (error) {
             setLoginError(error.message || "Échec de la connexion");
         } finally {
             setIsAuthenticating(false);
         }
-    }, [login, currentUser, router]);
+    }, [login, router]);
+
 
     // ✅ useEffect pour rediriger si déjà connecté (le contexte gère l'état d'authentification)
     useEffect(() => {
