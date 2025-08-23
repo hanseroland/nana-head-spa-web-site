@@ -28,33 +28,48 @@ const SignIn = () => {
     const [loginError, setLoginError] = useState(null);
     const [isAuthenticating, setIsAuthenticating] = useState(false); // Pour le spinner global
 
+    /* const handleSignin = useCallback(async (values) => {
+         setIsAuthenticating(true); // Active le spinner
+         setLoginError(null); // Réinitialise les erreurs précédentes
+ 
+         try {
+ 
+             // Utilisez la fonction simulée ou la fonction réelle de l'API
+             const response = await LoginUser(values);
+ 
+             if (response.success && response.data) {
+ 
+                 await login(response.data);
+ 
+                 const redirectPath = router.query.redirect || (response.data.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte');
+                 router.push(redirectPath);
+ 
+             } else {
+                 setLoginError(response.message || "Échec de la connexion.");
+             }
+         } catch (error) {
+             console.error("Erreur de connexion :", error.message);
+             setLoginError(error.message || "Une erreur inattendue est survenue lors de la connexion.");
+         } finally {
+             setIsAuthenticating(false); // Désactive le spinner
+         }
+     }, [login, router]);*/
+
+
     const handleSignin = useCallback(async (values) => {
-        setIsAuthenticating(true); // Active le spinner
-        setLoginError(null); // Réinitialise les erreurs précédentes
+        setIsAuthenticating(true);
+        setLoginError(null);
 
         try {
-
-            // Utilisez la fonction simulée ou la fonction réelle de l'API
-            const response = await LoginUser(values);
-
-            if (response.success && response.data) {
-
-                await login(response.data);
-
-                const redirectPath = router.query.redirect || (response.data.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte');
-                router.push(redirectPath);
-
-            } else {
-                setLoginError(response.message || "Échec de la connexion.");
-            }
+            await login(values); // le contexte gère l'appel API + cookie
+            const redirectPath = currentUser?.role === 'admin' ? '/admin/dashboard' : '/admin/moncompte';
+            router.push(redirectPath);
         } catch (error) {
-            console.error("Erreur de connexion :", error.message);
-            setLoginError(error.message || "Une erreur inattendue est survenue lors de la connexion.");
+            setLoginError(error.message || "Échec de la connexion");
         } finally {
-            setIsAuthenticating(false); // Désactive le spinner
+            setIsAuthenticating(false);
         }
-    }, [login, router]);
-
+    }, [login, currentUser, router]);
 
     // ✅ useEffect pour rediriger si déjà connecté (le contexte gère l'état d'authentification)
     useEffect(() => {

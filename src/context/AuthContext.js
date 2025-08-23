@@ -18,10 +18,22 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    const login = useCallback(async (userData) => {
-        setCurrentUser(userData);
-        setIsAuthenticated(true);
+    const login = useCallback(async ({ email, password }) => {
+        try {
+            const response = await LoginUser({ email, password }); // appelle l'API login
+            if (response.success && response.data) {
+                setCurrentUser(response.data); // state local
+                setIsAuthenticated(true);      // authentifié
+            } else {
+                throw new Error(response.message || "Login échoué");
+            }
+        } catch (err) {
+            console.error('Erreur login:', err.message);
+            throw err; // pour que la page sign-in capture l'erreur
+        }
     }, []);
+
+
 
     const logout = useCallback(
         async (redirect = true) => {

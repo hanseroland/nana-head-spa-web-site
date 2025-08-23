@@ -1,3 +1,4 @@
+//src/apiCalls/index.js
 import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
@@ -18,7 +19,7 @@ export const axiosInstance = async (method, url, payload) => {
 };
 
 // Pour upload
-export const axiosInstanceUpload = async (method, url, payload) => {
+export const axiosInstanceUploade = async (method, url, payload) => {
     try {
         const response = await axios({
             method,
