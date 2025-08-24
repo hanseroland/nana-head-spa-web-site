@@ -19,7 +19,8 @@ export default function App({ Component, pageProps }) {
   const [themeMode, setThemeMode] = useState('light'); // ou 'dark'
 
   // Définissez les routes qui utiliseront le AuthLayout
-  const authRoutes = ['/connexion', '/inscription', '/reinitialiser-mot-de-passe', '/mot-de-passe-oublie']; // Ajoutez toutes vos routes d'authentification ici
+  // const authRoutes = ['/connexion', '/inscription', '/reinitialiser-mot-de-passe', '/mot-de-passe-oublie']; // Ajoutez toutes vos routes d'authentification ici
+  const authRoutes = ['/connexion', '/inscription', '/forgot-password', '/reset-password']; // Ajoute les routes de mot de passe oublié et de réinitialisation.
 
   const isAdminRoute = router.pathname.startsWith('/admin');
   const isAuthRoute = authRoutes.includes(router.pathname); // <-- Nouveau: Vérifie si c'est une route d'authentification

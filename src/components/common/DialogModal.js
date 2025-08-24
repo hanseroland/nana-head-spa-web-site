@@ -33,6 +33,7 @@ export default function DialogModal({ form, title, openModal, setOpenModal }) {
                 open={openModal}
                 maxWidth="md" // Largeur maximale du modal
                 fullWidth={true} // Le modal prend toute la largeur disponible
+                keepMounted
             >
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
                     {title}

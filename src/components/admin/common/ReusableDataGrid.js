@@ -29,7 +29,7 @@ const ReusableDataGrid = ({
     checkboxSelection = false,
     onRowSelectionModelChange,
     getRowId = (row) => row._id, // Par défaut, utilise _id pour l'ID de ligne
-    height = '400px', // Hauteur par défaut
+    height = '600px', // Hauteur par défaut
     autoHeight = false,
     sx,
     initialState,

@@ -2,7 +2,7 @@
 
 import React from 'react'; // Plus besoin de useState et useEffect locaux pour le chargement de l'user
 import MyAccountForm from '@/components/admin/forms/MyAccountForm'; // Assurez-vous que le chemin est correct
-import { Grid, Box, Typography, Container, CircularProgress, Alert } from '@mui/material';
+import { Grid, Box, Typography, Container, CircularProgress, Alert, Paper } from '@mui/material';
 import { SetCurrentUser } from '@/redux/slices/userSlice'; // Importation de l'action pour mettre à jour l'utilisateur
 import MenuShortcut from '@/components/admin/common/MenuShortcut';
 import { useAuth } from '@/context/AuthContext';
@@ -80,6 +80,25 @@ function Moncompte() {
                             <MenuShortcut userRole={currentUser?.role} />
                         </Typography>
                         {/* Ajoutez d'autres infos pertinentes ici */}
+                    </Box>
+
+                    <Box sx={{ mt: 3, p: 2, border: '1px dashed grey', borderRadius: 2, }}>
+                        <Paper
+                            elevation={4}
+                            sx={{
+                                p: { xs: 1, sm: 2 },
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <Typography fontWeight={600} align='center' variant="button" sx={{ mt: 2 }}>
+                                Modifier le mot de passe ? {" "}
+                                <a href="/forgot-password" style={{ color: "blue", textDecoration: "none" }}>
+                                    cliquez ici
+                                </a>
+                            </Typography>
+                        </Paper>
+
                     </Box>
                 </Grid>
             </Grid>

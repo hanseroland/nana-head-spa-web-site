@@ -1,117 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Box, Typography, IconButton, Alert, CircularProgress, Paper, Chip } from '@mui/material';
-import { GetAllAppointmentsForAdmin, UpdateAppointmentStatus, CancelAppointment } from '@/apiCalls/appointments';
-import { format } from 'date-fns'; // Pour formater les dates
-import { fr } from 'date-fns/locale'; // Pour avoir les jours/mois en français
+import { UpdateAppointmentStatus, CancelAppointment } from '@/apiCalls/appointments';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { Edit as EditIcon, Cancel as CancelIcon, CheckCircle as CheckCircleIcon, Block as BlockIcon } from '@mui/icons-material';
 import ReusableDataGrid from '@/components/admin/common/ReusableDataGrid';
 import AppointmentEditModal from '@/components/admin/AppointmentEditModal';
-
+import { useAppointments } from '@/components/admin/useAppointment';
 
 
 
 function RendezVous() {
+    const { appointments, loading, setLoading, error, fetchAppointments, updateAppointmentInState } = useAppointments();
 
-    const [appointments, setAppointments] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectionModel, setSelectionModel] = useState([]); // Pour gérer la sélection de lignes
-
-    // NOUVEAUX ÉTATS pour le modal d'édition
+    const [selectionModel, setSelectionModel] = useState([]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedAppointmentForEdit, setSelectedAppointmentForEdit] = useState(null);
 
 
-
-
-    // Fonction pour formater l'affichage du statut avec une puce colorée
-    const getStatusChip = (status) => {
+    const getStatusChip = useCallback((status) => {
         let color;
         switch (status) {
-            case 'pending':
-                color = 'warning'; // Orange
-                break;
-            case 'confirmed':
-                color = 'success'; // Vert
-                break;
-            case 'cancelled':
-                color = 'error'; // Rouge
-                break;
-            case 'completed':
-                color = 'primary'; // Bleu
-                break;
-            case 'in_progress':
-                color = 'info'; // Cyan
-                break;
-            default:
-                color = 'default';
+            case 'pending': color = 'warning'; break;
+            case 'confirmed': color = 'success'; break;
+            case 'cancelled': color = 'error'; break;
+            case 'completed': color = 'primary'; break;
+            case 'in_progress': color = 'info'; break;
+            default: color = 'default';
         }
         return <Chip label={status.replace('_', ' ')} color={color} size="small" />;
-    };
+    }, []);
 
-
-
-    const fetchAppointments = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await GetAllAppointmentsForAdmin(); // Pas de filtres pour l'instant
-            if (response.success) {
-                // Ajoute un 'id' unique si ton _id n'est pas directement utilisable par DataGrid
-                // ou si tu as besoin d'un 'id' numérique pour certaines opérations.
-                // DataGrid utilise 'id' par défaut, sinon il faut la prop getRowId
-                const formattedAppointments = response?.data.map(app => ({
-                    ...app,
-                    id: app._id, // Utilise _id comme id pour DataGrid
-                    // Assure-toi que client et formula sont populés par ton backend
-                    clientName: app.client ? `${app.client.firstName} ${app.client.lastName}` : 'N/A',
-                    formulaTitle: app.formula ? app.formula.title : 'N/A',
-                    adminNotes: app.adminNotes || '', // Assure-toi que adminNotes est une chaîne
-                    processedBy: app.processedBy ? {
-                        firstName: app.processedBy.firstName,
-                        lastName: app.processedBy.lastName
-                    } : null, // Ou undefined, selon comment tu préfères gérer l'absence
-
-                }));
-                setAppointments(formattedAppointments);
-            } else {
-                setError(response.message || "Erreur lors du chargement des rendez-vous.");
-            }
-        } catch (err) {
-            console.error("Erreur API lors du chargement des rendez-vous admin:", err);
-            setError("Impossible de se connecter au serveur pour récupérer les rendez-vous.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchAppointments();
-    }, []); // Se déclenche une seule fois au montage du composant
-
-
-
-    const handleStatusUpdate = async (appointmentId, newStatus) => {
+    const handleStatusUpdate = useCallback(async (appointmentId, newStatus) => {
         setLoading(true); // Bloque la grille pendant la mise à jour
         try {
             const response = await UpdateAppointmentStatus(appointmentId, newStatus);
-            if (response.success) {
-                alert(`Statut du rendez-vous mis à jour en "${newStatus}" !`);
-                fetchAppointments(); // Recharger les données après la mise à jour
-            } else {
-                alert(`Échec de la mise à jour du statut: ${response.message}`);
-            }
+            setAppointments((prev) =>
+                prev.map((rdv) => (rdv._id === id ? { ...rdv, status: newStatus } : rdv))
+            );
+
+            setTimeout(() => setOpenModal(false), 100);
         } catch (err) {
             console.error("Erreur lors de la mise à jour du statut:", err);
             alert("Erreur de connexion lors de la mise à jour du statut.");
         } finally {
             setLoading(false);
         }
-    };
+    }, [updateAppointmentInState]);
 
-
-
-    const handleCancelAppointment = async (appointmentId) => {
+    const handleCancelAppointment = useCallback(async (appointmentId) => {
         if (window.confirm("Êtes-vous sûr de vouloir annuler ce rendez-vous ?")) {
             setLoading(true);
             try {
@@ -129,25 +66,24 @@ function RendezVous() {
                 setLoading(false);
             }
         }
-    };
+    }, [updateAppointmentInState]);
 
-
-    const handleEditClick = (appointment) => {
+    const handleEditClick = useCallback((appointment) => {
         setSelectedAppointmentForEdit(appointment);
         setIsEditModalOpen(true);
-    };
+    }, []);
 
-    const handleEditModalClose = () => {
+    const handleEditModalClose = useCallback(() => {
         setIsEditModalOpen(false);
         setSelectedAppointmentForEdit(null);
-    };
+    }, []);
 
-    const handleEditSuccess = () => {
+    const handleEditSuccess = useCallback(() => {
         fetchAppointments(); // Recharger les données après une édition réussie
         handleEditModalClose();
-    };
+    }, [fetchAppointments, handleEditModalClose]);
 
-    const columns = [
+    const columns = useMemo(() => [
         {
             field: 'date',
             headerName: 'Date',
@@ -243,86 +179,68 @@ function RendezVous() {
             filterable: false, // Ni filtrables
             disableColumnMenu: true, // Cache le menu de colonne pour les actions
         },
-    ];
-
-
-
+    ], [handleStatusUpdate, handleCancelAppointment, handleEditClick]);
 
     return (
         <Box sx={{ p: 3 }}>
-
             <Typography variant="h4" component="h1" gutterBottom>
                 Gestion des Rendez-vous
             </Typography>
-
             {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
                 </Alert>
             )}
-
             {loading && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', my: 2, alignItems: 'center' }}>
                     <CircularProgress size={20} />
                     <Typography ml={1}>Chargement des rendez-vous...</Typography>
                 </Box>
             )}
-
             {!loading && appointments.length === 0 && !error && (
                 <Alert severity="info" sx={{ mb: 2 }}>
                     Aucun rendez-vous à afficher pour le moment.
                 </Alert>
             )}
-
-
             {!loading && appointments.length > 0 && (
-                <Paper elevation={3} sx={{ height: 600, width: '100%' }}> {/* Donne une hauteur fixe au conteneur */}
+                <Paper elevation={3} sx={{ height: 600, width: '100%' }}>
                     <ReusableDataGrid
                         rows={appointments}
                         columns={columns}
-                        loading={loading} // La prop loading du DataGrid reflète l'état de chargement
-                        checkboxSelection // Active les checkboxes de sélection
+                        loading={loading}
+                        checkboxSelection
                         onRowSelectionModelChange={(newSelectionModel) => {
                             setSelectionModel(newSelectionModel);
-                            console.log('Lignes sélectionnées:', newSelectionModel);
                         }}
-                        getRowId={(row) => row._id} // Dit à DataGrid d'utiliser _id comme ID unique
+                        getRowId={(row) => row._id}
                         initialState={{
-                            pagination: {
-                                paginationModel: { pageSize: 10, page: 0 },
-                            },
+                            pagination: { paginationModel: { pageSize: 10, page: 0 } },
                         }}
-                        pageSizeOptions={[5, 10, 25]} // Options de pagination
-                        disableRowSelectionOnClick // Empêche la sélection au clic sur la ligne (seul le checkbox sélectionne)
+                        pageSizeOptions={[5, 10, 25]}
+                        disableRowSelectionOnClick
                         sx={{
-                            '& .MuiDataGrid-columnHeaders': {
-                                backgroundColor: '#f0f0f0', // Exemple de style pour les en-têtes
-                            },
+                            '& .MuiDataGrid-columnHeaders': { backgroundColor: '#f0f0f0' },
                         }}
                     />
                 </Paper>
             )}
-
-            {/* Exemple d'utilisation de la sélection de lignes (par exemple, pour une action groupée) */}
             {selectionModel.length > 0 && (
                 <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}>
                     <Typography>
                         {selectionModel.length} rendez-vous sélectionné(s).
                     </Typography>
-                    {/* <Button variant="contained" color="secondary" onClick={() => alert('Action groupée')}>
-                    Exécuter action sur sélection
-                </Button> */}
                 </Box>
             )}
 
-            {/* Rendu du modal d'édition */}
-            <AppointmentEditModal
-                isOpen={isEditModalOpen}
-                onClose={handleEditModalClose}
-                appointmentData={selectedAppointmentForEdit}
-                onUpdateSuccess={handleEditSuccess}
-            />
-
+            {/* Le modal d'édition a été extrait dans un composant séparé */}
+            {selectedAppointmentForEdit && (
+                <AppointmentEditModal
+                    open={isEditModalOpen}
+                    onClose={handleEditModalClose}
+                    appointment={selectedAppointmentForEdit}
+                    onEditSuccess={handleEditSuccess}
+                />
+            )}
         </Box>
     );
 }

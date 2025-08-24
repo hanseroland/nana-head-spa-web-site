@@ -171,6 +171,12 @@ const SignIn = () => {
                                 Inscrivez-vous
                             </a>
                         </Typography>
+                        <Typography variant="body2" sx={{ mt: 2 }}>
+                            mot de passe oublié ? {" "}
+                            <a href="/forgot-password" style={{ color: "blue", textDecoration: "none" }}>
+                                cliquez ici
+                            </a>
+                        </Typography>
                     </Form>
                 )}
             </Formik>
